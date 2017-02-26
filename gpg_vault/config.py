@@ -36,6 +36,10 @@ CONFIG={
         'vext.default': '.gpg',
         'ext.backup': '.bak',
         'tmp.dir.prefix': 'gpg_vault_',
+        'tmp.dir.name': 'gpg_vault',
+        'server.port': 61270,
+        'server.timeout.reset_all': 60 * 30,
+        'server.timeout.reset_one': 60 * 10,
         'exec.srm': 'srm',
         'exec.cat': 'cat',
         'exec.edit': 'vi',     # TODO use EDITOR

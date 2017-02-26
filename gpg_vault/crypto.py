@@ -50,7 +50,7 @@ def decryptFile(vpath, destPath, pp64):
     gpg.stdin.close()
     gpg.wait()
     if gpg.returncode != 0:
-      raise errors.VaultSecurityError("Failed to decrypt file '" + vpath + "'", [])
+      raise errors.VaultSecurityError("Failed to decrypt file '" + vpath + "'")
   finally:
     log.verbose("closing gpg error file")
     if gpgError: gpgError.close

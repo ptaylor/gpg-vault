@@ -48,6 +48,7 @@ def runCommand(cmd, path):
     return after_mtime > before_mtime
 
 
+
 def getTmpDir():
   
     if 'TMP' in os.environ:
@@ -56,16 +57,18 @@ def getTmpDir():
         TMPDIR="/tmp"
 
     if not os.path.exists(TMPDIR):
-        error("Temporary directory " + TMPDIR + " does not exist")
+        error("Temporary directory %s does not exist" % TMPDIR)
 
-    VDIR = os.path.join(TMPDIR, "v")
+    t = config.CONFIG['tmp.dir.name']
+    vdir = os.path.join(TMPDIR, t)
+    log.verbose("vdir %s" % str(vdir))
 
-    if not os.path.exists(VDIR):
-        log("creating temporary directory " + VDIR)
-        os.mkdir(VDIR)
-        if not os.path.exists(VDIR):   
-            error("faild to create temporary directory " + VDIR)
-    return VDIR
+    if not os.path.exists(vdir):
+        log.verbose("creating temporary directory %s" % str(vdir))
+        os.mkdir(vdir)
+        if not os.path.exists(vdir):   
+            log.error("faild to create temporary directory %s" % str(vdir))
+    return vdir
 
 
 

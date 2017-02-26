@@ -37,6 +37,7 @@ setup(
 		'scripts/vcat', 
 		'scripts/vedit', 
 		'scripts/vencrypt', 
-		'scripts/vclear'
+		'scripts/vclear',
+                'scripts/gpg-vault-server'
 	]
 )

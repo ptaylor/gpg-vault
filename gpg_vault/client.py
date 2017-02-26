@@ -25,6 +25,8 @@
 import socket
 import re
 import os
+import subprocess
+import time
 
 import config
 import vault
@@ -66,11 +68,11 @@ def sendRequest(args):
 def getServerPort(vdir):
   log.verbose("getServerPort vdir=%s" % vdir)
 
-  pidFile = os.path.join(vdir, 'vserver.pid')
+  pidFile = os.path.join(vdir, 'server.pid')
   if not os.path.exists(pidFile):
     log.verbose("pidfile %s does not exist" % pidFile)
-    log.info("launching vserver")
-    args = ['vserver', vdir]
+    log.info("launching server")
+    args = ['gpg-vault-vserver-tmp', vdir]
     global pid
     pid = subprocess.Popen(args = args, shell = False).pid
     log.verbose("pid: %d" % pid)
