@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+
+import gpg_vault
+import sys
+
+gpg_vault.config.set_config(sys.argv[1:])
+gpg_vault.command.run('encrypt', gpg_vault.config.CONFIG['files'])
