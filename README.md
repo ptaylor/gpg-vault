@@ -42,8 +42,8 @@ Hello
 % vencrypt file.txt 
 Passphrase: ************ 
 Confirm Passphrase: ************ 
-[encrypting file file2.txt to file2.txt.gpg]
-[wiping file file2.txt]
+[encrypting file file.txt to file.txt.gpg]
+[wiping file file.txt]
 ```
 
 ## Clearing cached passphrases

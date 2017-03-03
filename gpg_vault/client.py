@@ -74,7 +74,7 @@ def getServerPort(vdir):
     if not os.path.exists(pidFile):
         log.verbose("pidfile %s does not exist" % pidFile)
         log.info("launching server")
-        args = ['gpg-vault-vserver-tmp', vdir]
+        args = ['gpg-vault-server', vdir]
         global pid
         pid = subprocess.Popen(args=args, shell=False).pid
         log.verbose("pid: %d" % pid)

@@ -26,9 +26,9 @@
 from distutils.core import setup
 
 setup(
-	name='GPGVault',
+	name='gpg-vault',
 	version='1.0',
-	description='Wrapper scripts around GPG file encryption.',
+	description='Simple GPG based file encryption utility.',
 	author='Paul Taylor',
 	author_email='pftylr@gmail.com',
 	url='https://github.com/ptaylor/gpg-vault',
