@@ -1,4 +1,4 @@
-# vault-gpg
+# GPG Vault
 
 Simple GPG based file encryption utility.
 
