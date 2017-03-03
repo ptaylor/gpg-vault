@@ -4,6 +4,13 @@ Simple GPG based file encryption utility.
 
 Allows viewing and editing of encrypted files with passphrase caching.
 
+## Installing 
+
+Using PIP:
+```
+% pip install gpg-vault
+```
+
 ## Viewing files
 
 ```
