@@ -39,5 +39,8 @@ setup(
 		'scripts/vencrypt', 
 		'scripts/vclear',
                 'scripts/gpg-vault-server'
-	]
+	],
+        install_requires=[
+          'PyYAML',
+        ],
 )

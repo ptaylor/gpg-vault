@@ -24,9 +24,12 @@
 # SOFTWARE.
 #
 
+
+import os
 import sys
 import getopt
-
+import yaml
+import log
 import utils
 
 CONFIG = {
@@ -52,13 +55,33 @@ CONFIG = {
 }
 
 
-def show_config():
-    verbose("Configuration:")
+
+
+def dump_config():
+    log.verbose("configuration:")
     for c in CONFIG:
-        verbose(" " + str(c) + "=" + str(CONFIG[c]))
+        log.verbose("    %s=%s" %(c, str(CONFIG[c])))
 
 
-def set_config(argv):
+def init(argv):
+    vdir = utils.getVaultDir()
+    config_file = "%s/%s" % (vdir, "config")
+
+    if os.path.exists(config_file):
+        try:
+            f = open(config_file)
+            config = yaml.safe_load(f)
+            f.close()
+
+        except Exception as e:
+            log.error("cannot load config file, exception %s" % e)
+            exit(1)
+
+    CONFIG.update(config)
+    process_args(argv)
+
+
+def process_args(argv):
 
     try:
         opts, args = getopt.getopt(argv, "g:hvqk", ["group=", "help", "verbose", "quiet", "kill"])
@@ -81,7 +104,7 @@ def set_config(argv):
 
     CONFIG['vdir'] = utils.getVaultDir()
 
-    show_config
+    dump_config()
 
 
 def usage():

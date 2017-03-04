@@ -38,10 +38,15 @@ def runCommand(cmd, path):
     before_mtime = 0
     if os.path.exists(path):
         before_mtime = os.path.getmtime(path)
-    ret = subprocess.call(args=[cmd, path], shell=False)
-    log.verbose("ret: " + str(ret))
-    if ret != 0:
-        log.warning("process exited with error")
+    try:
+        ret = subprocess.call(args=[cmd, path], shell=False)
+        log.verbose("ret: " + str(ret))
+        if ret != 0:
+            log.warning("process exited with error")
+    except Exception as e:
+        log.error("error running command '%s %s' -> %s" % (cmd, path, str(e)))
+        return False
+
     if not os.path.exists(path):
         return False
     after_mtime = os.path.getmtime(path)

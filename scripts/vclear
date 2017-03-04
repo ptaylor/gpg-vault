@@ -28,5 +28,5 @@
 import sys
 import gpg_vault
 
-gpg_vault.config.set_config(sys.argv[1:])
+gpg_vault.config.init(sys.argv[1:])
 gpg_vault.command.run('clear', None)
