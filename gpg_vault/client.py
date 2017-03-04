@@ -35,6 +35,10 @@ import vault
 import log
 import errors
 
+def killServer():
+    log.info("killing server")
+    sendRequest(['quit'])
+
 
 def sendRequest(args):
 
@@ -63,7 +67,7 @@ def sendRequest(args):
         log.verbose('reply %s' % str(ret))
         raise errors.VaultSecurityError(str(ret))
     else:
-        log.verbose('unexpected reply %s' + str(ret))
+        log.verbose("unexpected reply %s" % str(ret))
         raise errors.VaultError('unable to process reply')
 
 

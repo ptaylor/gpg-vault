@@ -4,6 +4,5 @@ import sys
 import gpg_vault.config
 import gpg_vault.server
 
-
 gpg_vault.config.set_config(sys.argv[1:])
 gpg_vault.server.start()

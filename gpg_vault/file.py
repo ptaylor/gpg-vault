@@ -35,11 +35,11 @@ import config
 def secureDeletePath(path):
 
     # TODO - get command from config
-    log.verbose("secureDelete path=%s" % path)
+    log.verbose("secureDeletePath path=%s" % path)
     if not os.path.exists(path):
-        log.info("path " + str(path) + " does not exist")
+        log.info("path " + path + " does not exist")
     else:
-        log.info("wiping file %s" % str(path))
+        log.info("wiping file %s" % path)
         srmStderrLog = os.path.join(config.CONFIG['vdir'], "srm.stderr.log")
         srmStdoutLog = os.path.join(config.CONFIG['vdir'], "srm.stdout.log")
         try:
@@ -58,10 +58,17 @@ def secureDeletePath(path):
 
 def secureDeleteDir(path):
 
-    log.verbose("secureDelete: " + str(path))
+    log.verbose("secureDeleteDir path=%s" % path)
+
     # Just to be safe
+    prefix = config.CONFIG['work.dir.name']
+    if prefix not in path:
+        log.error("Directory to be deleted '%s' cannot be deleted" % str(path))
+        log.error("Check directory for any remaining files containing sensitive data")
+        return
+
     prefix = config.CONFIG['tmp.dir.prefix']
-    if not path.startswith("/tmp/") or prefix not in path:
+    if prefix not in path:
         log.error("Directory to be deleted '%s' cannot be deleted" % str(path))
         log.error("Check directory for any remaining files containing sensitive data")
         return
@@ -69,7 +76,7 @@ def secureDeleteDir(path):
     if not os.path.exists(path):
         log.info("path " + str(path) + " does not exist")
     else:
-        log.info("wiping directory" + str(path))
+        log.info("wiping directory %s"  % path)
         srmStderrLog = os.path.join(config.CONFIG['vdir'], "srm.stderr.log")
         srmStdoutLog = os.path.join(config.CONFIG['vdir'], "srm.stdout.log")
         try:

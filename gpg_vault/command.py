@@ -43,6 +43,10 @@ def run(cmd, files):
         for file in config.CONFIG['files']:
             log.verbose("running command '" + cmd + "' on file '" + file + "'")
             runForFile(cmd, file)
+
+    if config.CONFIG['kill']:
+        client.killServer()
+
     exit(0)
 
 
@@ -72,8 +76,6 @@ def runForFile(cmd, file):
         log.error("Unexpected error. " + str(e))
         exit(1)
 
-    exit(0)
-
 
 def cmd_cat(cmd, path):
     log.verbose("cmd_cat " + str(cmd) + ", " + str(path))
@@ -82,7 +84,7 @@ def cmd_cat(cmd, path):
 
 
 def cmd_open(cmd, path):
-    tmpdir = utils.getTmpTmpDir()
+    tmpdir = utils.getTmpDir()
     try:
         tmppath = os.path.join(tmpdir, str(os.getpid()))
         log.verbose("cmd_open " + str(cmd) + ", " + str(path))
@@ -93,7 +95,7 @@ def cmd_open(cmd, path):
 
 def cmd_edit(cmd, path):
     log.verbose("cmd_edit " + str(cmd) + ", " + str(path))
-    tmpdir = utils.getTmpTmpDir()
+    tmpdir = utils.getTmpDir()
     try:
         tmppath = os.path.join(tmpdir, str(os.getpid()))
         vault.editVPath(path, tmppath, cmd)

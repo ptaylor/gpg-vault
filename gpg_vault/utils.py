@@ -50,30 +50,29 @@ def runCommand(cmd, path):
     return after_mtime > before_mtime
 
 
-def getTmpDir():
+def getVaultDir():
+    home =  os.path.expanduser("~")
 
-    if 'TMP' in os.environ:
-        TMPDIR = os.environ['TMP']
-    else:
-        TMPDIR = "/tmp"
+    log.verbose("home dir: %s" % home)
 
-    if not os.path.exists(TMPDIR):
-        error("Temporary directory %s does not exist" % TMPDIR)
+    if not os.path.exists(home):
+        error("Directory %s does not exist" % home)
 
-    t = config.CONFIG['tmp.dir.name']
-    vdir = os.path.join(TMPDIR, t)
-    log.verbose("vdir %s" % str(vdir))
+    t = config.CONFIG['work.dir.name']
+    vdir = os.path.join(home, t)
+    log.verbose("vdir: %s" % str(vdir))
 
     if not os.path.exists(vdir):
-        log.verbose("creating temporary directory %s" % str(vdir))
+        log.verbose("creating directory %s" % str(vdir))
         os.mkdir(vdir)
         if not os.path.exists(vdir):
-            log.error("faild to create temporary directory %s" % str(vdir))
+            log.error("faild to create directory %s" % str(vdir))
     return vdir
 
 
-def getTmpTmpDir():
-    td = getTmpDir()
+def getTmpDir():
+
+    td = config.CONFIG['vdir']
     prefix = config.CONFIG['tmp.dir.prefix']
     p = "%s%s" % (prefix, str(os.getpid()))
     path = os.path.join(td, p)

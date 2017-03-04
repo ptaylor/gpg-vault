@@ -33,12 +33,13 @@ CONFIG = {
         'group': 'default',
         'verbose': False,
         'sensitive': False,
+        'kill': False,
         'vexts': set(['.gpg', '.pgp', '.v']),
         'ext.default': '.txt',
         'vext.default': '.gpg',
         'ext.backup': '.bak',
         'tmp.dir.prefix': 'gpg_vault_',
-        'tmp.dir.name': 'gpg_vault',
+        'work.dir.name': '.gpg_vault',
         'server.port': 61270,
         'server.timeout.reset_all': 60 * 30,
         'server.timeout.reset_one': 60 * 10,
@@ -59,7 +60,7 @@ def show_config():
 def set_config(argv):
 
     try:
-        opts, args = getopt.getopt(argv, "g:hv", ["group=", "help", "verbose"])
+        opts, args = getopt.getopt(argv, "g:hvk", ["group=", "help", "verbose", "kill"])
     except getopt.GetoptError:
         usage()
 
@@ -71,10 +72,12 @@ def set_config(argv):
             usage()
         elif opt in ("-v", "--verbose"):
             CONFIG['verbose'] = True
+        elif opt in ("-k", "--kill"):
+            CONFIG['kill'] = True
 
     CONFIG['files'] = args
 
-    CONFIG['vdir'] = utils.getTmpDir()
+    CONFIG['vdir'] = utils.getVaultDir()
 
     show_config
 

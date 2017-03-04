@@ -32,7 +32,6 @@ import os
 import time
 
 import config
-import utils
 
 HOST = "localhost"
 PMAP = {}
@@ -42,7 +41,7 @@ global logFile
 
 def start():
 
-    vdir = utils.getTmpDir()
+    vdir = config.CONFIG['vdir']
     if not os.path.exists(vdir):
         print "ERROR - directory " + vdir + " does not exist"
         exit(1)
@@ -81,7 +80,7 @@ def start():
     log_to_file("exiting...")
 
 
-def request_reset():
+def reset():
     global PMAP
     log_to_file("reset")
     PMAP.clear()
@@ -91,7 +90,7 @@ def request_reset():
 def request_set_passphrase(group, pw):
     global PMAP
     ts = time.time()
-    log_to_file("request_set_passphrase %s %d" % (group, ts))
+    log_to_file("request_set_passphrase group=%s, timestamp=%d" % (group, ts))
 
     PMAP[group] = (pw, ts)
     return "ok"
@@ -100,7 +99,7 @@ def request_set_passphrase(group, pw):
 def request_get_passphrase(group):
     global PMAP
     ts = time.time()
-    log_to_file("request_get_passphrase %s %d" % (group, ts))
+    log_to_file("request_get_passphrase group=%s, timestamp=%d" % (group, ts))
     if group in PMAP:
         log_to_file("have cached passphrase")
         p = PMAP[group]
@@ -131,18 +130,21 @@ def request_quit():
     notShutdown = False
     return "ok"
 
+def request_reset():
+    reset()
+    return "ok"
 
 def log_to_file(m):
     now = datetime.datetime.now()
     global logFile
-    logFile.write("[" + str(now) + "] " + str(m) + "\n")
+    logFile.write("[%s] %s\n" % (str(now), str(m)))
     logFile.flush()
 
 
 class MyTCPHandler(SocketServer.BaseRequestHandler):
 
     def __init__(self, request, client_address, server):
-        log_to_file("client %s" % str(client_address))
+        log_to_file("request from client %s" % str(client_address))
         SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
 
     def setup(self):
@@ -188,4 +190,4 @@ class VServer(SocketServer.TCPServer):
 
     def handle_timeout(self):
         log_to_file("timeout")
-        request_reset()
+        reset()
