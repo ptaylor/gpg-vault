@@ -130,9 +130,11 @@ def request_quit():
     notShutdown = False
     return "ok"
 
+
 def request_reset():
     reset()
     return "ok"
+
 
 def log_to_file(m):
     now = datetime.datetime.now()

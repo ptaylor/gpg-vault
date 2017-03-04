@@ -76,7 +76,7 @@ def secureDeleteDir(path):
     if not os.path.exists(path):
         log.info("path " + str(path) + " does not exist")
     else:
-        log.info("wiping directory %s"  % path)
+        log.info("wiping directory %s" % path)
         srmStderrLog = os.path.join(config.CONFIG['vdir'], "srm.stderr.log")
         srmStdoutLog = os.path.join(config.CONFIG['vdir'], "srm.stdout.log")
         try:

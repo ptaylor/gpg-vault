@@ -35,6 +35,7 @@ import vault
 import log
 import errors
 
+
 def killServer():
     log.info("killing server")
     sendRequest(['quit'])

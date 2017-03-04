@@ -51,7 +51,8 @@ def runCommand(cmd, path):
 
 
 def getVaultDir():
-    home =  os.path.expanduser("~")
+
+    home = os.path.expanduser("~")
 
     log.verbose("home dir: %s" % home)
 
