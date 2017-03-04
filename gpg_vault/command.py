@@ -80,6 +80,7 @@ def runForFile(cmd, file):
 def cmd_cat(cmd, path):
     log.verbose("cmd_cat " + str(cmd) + ", " + str(path))
     vault.openVPath(path, None, None)
+    print ""
     utils.oswarning()
 
 

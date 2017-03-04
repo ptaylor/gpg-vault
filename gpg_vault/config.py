@@ -32,6 +32,7 @@ import utils
 CONFIG = {
         'group': 'default',
         'verbose': False,
+        'quiet': False,
         'sensitive': False,
         'kill': False,
         'vexts': set(['.gpg', '.pgp', '.v']),
@@ -60,12 +61,11 @@ def show_config():
 def set_config(argv):
 
     try:
-        opts, args = getopt.getopt(argv, "g:hvk", ["group=", "help", "verbose", "kill"])
+        opts, args = getopt.getopt(argv, "g:hvqk", ["group=", "help", "verbose", "quiet", "kill"])
     except getopt.GetoptError:
         usage()
 
     for opt, arg in opts:
-        print "[%s %s]" % (opt, arg)
         if opt in ("-g", "--group"):
             CONFIG['group'] = arg
         elif opt in ("-h", "--help"):
@@ -74,6 +74,8 @@ def set_config(argv):
             CONFIG['verbose'] = True
         elif opt in ("-k", "--kill"):
             CONFIG['kill'] = True
+        elif opt in ("-q", "--quiet"):
+            CONFIG['quiet'] = True
 
     CONFIG['files'] = args
 

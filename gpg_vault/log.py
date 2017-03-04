@@ -24,6 +24,8 @@
 # SOFTWARE.
 #
 
+import sys
+
 import config
 
 
@@ -38,12 +40,17 @@ def sensitive(m):
 
 
 def info(m):
-    print("[%s]" % str(m))
+    if not config.CONFIG['quiet']:
+        message(m)
 
 
 def error(m):
-    info("error: %s" % str(m))
+    message("error: %s" % m)
 
 
 def warning(m):
-    info("warning: %s " % str(m))
+    message("warning: %s" % str(m))
+
+
+def message(m):
+    sys.stderr.write("[%s]\n" % m)

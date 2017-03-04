@@ -89,11 +89,9 @@ def getTmpDir():
 def oswarning():
     # TODO - get message from config
     if sys.platform == 'darwin':
-        print ""
-        print "[Use CMD-K to clear sensitve information from the screen]"
+        log.info("Use CMD-K to clear sensitve information from the screen")
     else:
-        print ""
-        print "[Use ^L to clear sensitve information from the screen]"
+        log.ingo("Use ^L to clear sensitve information from the screen")
 
 
 def splitPath(path):
