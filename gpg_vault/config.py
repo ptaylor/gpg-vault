@@ -32,21 +32,27 @@ import yaml
 import log
 import utils
 
-CONFIG = {
+WORK_DIR_NAME = ".gpg_vault"
+
+
+DEFAULT_CONFIG = {
+
         'group': 'default',
         'verbose': False,
         'quiet': False,
         'sensitive': False,
         'kill': False,
-        'vexts': set(['.gpg', '.pgp', '.v']),
+
+        'vexts': ['.gpg', '.pgp', '.v'],
         'ext.default': '.txt',
         'vext.default': '.gpg',
         'ext.backup': '.bak',
         'tmp.dir.prefix': 'gpg_vault_',
-        'work.dir.name': '.gpg_vault',
+
         'server.port': 61270,
         'server.timeout.reset_all': 60 * 30,
         'server.timeout.reset_one': 60 * 10,
+
         'exec.srm': 'srm',
         'exec.cat': 'cat',
         'exec.edit': 'vi',     # TODO use EDITOR
@@ -55,15 +61,21 @@ CONFIG = {
 }
 
 
+global CONFIG 
+CONFIG = {
+    'verbose': False
+}
 
 
 def dump_config():
     log.verbose("configuration:")
-    for c in CONFIG:
-        log.verbose("    %s=%s" %(c, str(CONFIG[c])))
+    log.verbose("\n%s" % utils.dict2str(CONFIG))
 
 
 def init(argv):
+
+    global CONFIG
+
     vdir = utils.getVaultDir()
     config_file = "%s/%s" % (vdir, "config")
 
@@ -77,12 +89,16 @@ def init(argv):
             log.error("cannot load config file, exception %s" % e)
             exit(1)
 
-    CONFIG.update(config)
+    CONFIG = utils.merge(DEFAULT_CONFIG, config)
+
     process_args(argv)
+
+    dump_config()
 
 
 def process_args(argv):
 
+    global CONFIG
     try:
         opts, args = getopt.getopt(argv, "g:hvqk", ["group=", "help", "verbose", "quiet", "kill"])
     except getopt.GetoptError:
@@ -102,9 +118,6 @@ def process_args(argv):
 
     CONFIG['files'] = args
 
-    CONFIG['vdir'] = utils.getVaultDir()
-
-    dump_config()
 
 
 def usage():

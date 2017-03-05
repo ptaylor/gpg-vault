@@ -34,7 +34,7 @@ import config
 import vault
 import log
 import errors
-
+import utils
 
 def killServer():
     log.info("killing server")
@@ -45,7 +45,7 @@ def sendRequest(args):
 
     log.verbose("sendRequest args=%s" % args)
     req = " ".join(args)
-    port = getServerPort(config.CONFIG['vdir'])
+    port = getServerPort(utils.getVaultDir())
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         log.verbose("connecting to server on port %d" % port)

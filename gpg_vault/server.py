@@ -32,6 +32,7 @@ import os
 import time
 
 import config
+import utils
 
 HOST = "localhost"
 PMAP = {}
@@ -41,7 +42,7 @@ global logFile
 
 def start():
 
-    vdir = config.CONFIG['vdir']
+    vdir = utils.getVaultDir()
     if not os.path.exists(vdir):
         print "ERROR - directory " + vdir + " does not exist"
         exit(1)
@@ -184,7 +185,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 class VServer(SocketServer.TCPServer):
 
     allow_reuse_address = True
-    timeout = config.CONFIG['server.timeout.reset_all']
+    timeout = 60 * 10 # TODO get this from config
 
     def __init__(self, server_addr, t, handlerClass):
         timeout = t  # !! NOT WORKING

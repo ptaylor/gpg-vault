@@ -64,21 +64,22 @@ def getVaultDir():
     if not os.path.exists(home):
         error("Directory %s does not exist" % home)
 
-    t = config.CONFIG['work.dir.name']
+    t = config.WORK_DIR_NAME
     vdir = os.path.join(home, t)
-    log.verbose("vdir: %s" % str(vdir))
+    log.verbose("vault directory: %s" % str(vdir))
 
     if not os.path.exists(vdir):
         log.verbose("creating directory %s" % str(vdir))
         os.mkdir(vdir)
         if not os.path.exists(vdir):
             log.error("faild to create directory %s" % str(vdir))
+
     return vdir
 
 
 def getTmpDir():
 
-    td = config.CONFIG['vdir']
+    td = getVaultDir()
     prefix = config.CONFIG['tmp.dir.prefix']
     p = "%s%s" % (prefix, str(os.getpid()))
     path = os.path.join(td, p)
@@ -111,3 +112,47 @@ def splitPath(path):
 def log_exception(e):
     tb = traceback.format_exc()
     log.error(tb)
+
+
+#
+# Merge two dicts recursively
+#
+def merge(a, b):
+    c = {}
+    for k in a:
+        c[k] = a[k]
+
+    for k in b:
+        if k in c:
+            v1 = c[k]
+            v2 = b[k]
+            if isinstance(v1, dict) and isinstance(v2, dict):
+                c[k] = merge(v1, v2)
+            else:
+                c[k] = v2
+        else:
+            c[k] = b[k]
+
+    return c
+
+
+#
+# dict2str
+#
+def dict2str(d):
+    return dict2str2(d, 4)
+
+
+def dict2str2(d, i):
+    s = ""
+    for k in d:
+        s = s + "%s%s: " % (' ' * i, k)
+        v = d[k]
+        if isinstance(v, dict):
+            s = s + '{\n'
+            s = s + dict2str2(v, i + 4)
+            s = s + "%s}\n" % (' ' * i)
+        else:
+            s = s + str(v)
+            s = s + '\n'
+    return s

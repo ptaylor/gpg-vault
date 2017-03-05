@@ -30,7 +30,8 @@ import os
 import errors
 import log
 import config
-
+import file
+import utils
 
 def decryptFile(vpath, destPath, pp64):
     log.verbose("decyptFile vpath=%s destPath=%s" % (vpath, destPath))
@@ -41,7 +42,7 @@ def decryptFile(vpath, destPath, pp64):
         args.extend(['--output', destPath])
     args.append(vpath)
     log.verbose("args: " + str(args))
-    gpgErrorLog = os.path.join(config.CONFIG['vdir'], "gpg.error.log")
+    gpgErrorLog = os.path.join(utils.getVaultDir(), "gpg.error.log")
     try:
         gpgError = open(gpgErrorLog, "a")
     except IOError:
@@ -64,12 +65,12 @@ def encryptFile(srcPath, destPath, pp64):
     passphrase = str(pp64.decode('base64'))
     log.sensitive("passphrase |%s|" % passphrase)
     if os.path.exists(destPath):
-        secureDeletePath(destPath)
+        file.secureDeletePath(destPath)
     args = ['gpg', '--quiet', '--batch',
             '-c', '--symmetric', '--passphrase-fd', '0',
             '--output', destPath, srcPath]
     log.verbose("args: %s" % str(args))
-    gpgErrorLog = os.path.join(config.CONFIG['vdir'], "gpg.stderr.log")
+    gpgErrorLog = os.path.join(utils.getVaultDir(), "gpg.stderr.log")
     log.info("encrypting file %s to %s" % (srcPath, destPath))
     try:
         gpgError = open(gpgErrorLog, "a")

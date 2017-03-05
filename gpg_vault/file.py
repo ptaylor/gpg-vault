@@ -30,6 +30,7 @@ import subprocess
 import vault
 import log
 import config
+import utils
 
 
 def secureDeletePath(path):
@@ -40,8 +41,8 @@ def secureDeletePath(path):
         log.info("path " + path + " does not exist")
     else:
         log.info("wiping file %s" % path)
-        srmStderrLog = os.path.join(config.CONFIG['vdir'], "srm.stderr.log")
-        srmStdoutLog = os.path.join(config.CONFIG['vdir'], "srm.stdout.log")
+        srmStderrLog = os.path.join(utils.getVaultDir(), "srm.stderr.log")
+        srmStdoutLog = os.path.join(utils.getVaultDir(), "srm.stdout.log")
         try:
             srmStderr = open(srmStderrLog, "a")
             srmStdout = open(srmStdoutLog, "a")
@@ -61,7 +62,7 @@ def secureDeleteDir(path):
     log.verbose("secureDeleteDir path=%s" % path)
 
     # Just to be safe
-    prefix = config.CONFIG['work.dir.name']
+    prefix = config.WORK_DIR_NAME
     if prefix not in path:
         log.error("Directory to be deleted '%s' cannot be deleted" % str(path))
         log.error("Check directory for any remaining files containing sensitive data")
@@ -77,8 +78,8 @@ def secureDeleteDir(path):
         log.info("path " + str(path) + " does not exist")
     else:
         log.info("wiping directory %s" % path)
-        srmStderrLog = os.path.join(config.CONFIG['vdir'], "srm.stderr.log")
-        srmStdoutLog = os.path.join(config.CONFIG['vdir'], "srm.stdout.log")
+        srmStderrLog = os.path.join(utils.getVaultDir(), "srm.stderr.log")
+        srmStdoutLog = os.path.join(utils.getVaultDir(), "srm.stdout.log")
         try:
             srmStderr = open(srmStderrLog, "a")
             srmStdout = open(srmStdoutLog, "a")
