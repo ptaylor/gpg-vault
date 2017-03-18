@@ -26,23 +26,23 @@
 from distutils.core import setup
 
 setup(
-	name='gpg-vault',
-	version="1.1",
-	description='Simple GPG based file encryption utility.',
-	author='Paul Taylor',
-	author_email='pftylr@gmail.com',
-	url='https://github.com/ptaylor/gpg-vault',
-	packages=[
+        name='gpg-vault',
+        version="1.1",
+        description='Simple GPG based file encryption utility.',
+        author='Paul Taylor',
+        author_email='pftylr@gmail.com',
+        url='https://github.com/ptaylor/gpg-vault',
+        packages=[
                 'gpg_vault'
         ],
-	scripts=[
-		'scripts/vcat', 
-		'scripts/vedit', 
-		'scripts/vopen', 
-		'scripts/vencrypt', 
-		'scripts/vclear',
+        scripts=[
+                'scripts/vcat',
+                'scripts/vedit',
+                'scripts/vopen',
+                'scripts/vencrypt',
+                'scripts/vclear',
                 'scripts/gpg-vault-server'
-	],
+        ],
         install_requires=[
         ],
 )

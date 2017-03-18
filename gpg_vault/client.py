@@ -36,6 +36,7 @@ import log
 import errors
 import utils
 
+
 def killServer():
     log.info("killing server")
     sendRequest(['quit'])

@@ -34,10 +34,10 @@ import config
 
 
 def isTrue(b):
-  if isinstance(b, bool):
-      return b
-  else:
-      return b.lower() in ('true', 'yes')
+    if isinstance(b, bool):
+        return b
+    else:
+        return b.lower() in ('true', 'yes')
 
 
 def isFalse(b):

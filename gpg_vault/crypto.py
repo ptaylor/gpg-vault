@@ -33,6 +33,7 @@ import config
 import file
 import utils
 
+
 def decryptFile(vpath, destPath, pp64):
     log.verbose("decyptFile vpath=%s destPath=%s" % (vpath, destPath))
     passphrase = str(pp64.decode('base64'))

@@ -185,7 +185,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 class VServer(SocketServer.TCPServer):
 
     allow_reuse_address = True
-    timeout = 60 * 10 # TODO get this from config
+    timeout = 60 * 10  # TODO get this from config
 
     def __init__(self, server_addr, t, handlerClass):
         timeout = t  # !! NOT WORKING

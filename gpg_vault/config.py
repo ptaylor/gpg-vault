@@ -70,7 +70,7 @@ DEFAULT_CONFIG = {
 }
 
 
-global CONFIG 
+global CONFIG
 CONFIG = {
     'verbose': False
 }
@@ -89,7 +89,6 @@ def init(argv):
     vdir = utils.getVaultDir()
     config_file = "%s/%s" % (vdir, "config")
 
-
     config = ConfigParser.SafeConfigParser()
 
     if os.path.exists(config_file):
@@ -107,8 +106,6 @@ def init(argv):
     process_args(argv)
 
     dump_config()
-
-
 
 
 def process_args(argv):
