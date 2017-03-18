@@ -32,15 +32,17 @@ setup(
 	author='Paul Taylor',
 	author_email='pftylr@gmail.com',
 	url='https://github.com/ptaylor/gpg-vault',
-	packages=['gpg_vault'],
+	packages=[
+                'gpg_vault'
+        ],
 	scripts=[
 		'scripts/vcat', 
 		'scripts/vedit', 
+		'scripts/vopen', 
 		'scripts/vencrypt', 
 		'scripts/vclear',
                 'scripts/gpg-vault-server'
 	],
         install_requires=[
-          'PyYAML',
         ],
 )

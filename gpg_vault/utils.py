@@ -33,6 +33,17 @@ import log
 import config
 
 
+def isTrue(b):
+  if isinstance(b, bool):
+      return b
+  else:
+      return b.lower() in ('true', 'yes')
+
+
+def isFalse(b):
+    return not isTrue(b)
+
+
 def runCommand(cmd, path):
     log.verbose("runCommand %s %s" % (cmd, path))
     before_mtime = 0
@@ -80,7 +91,7 @@ def getVaultDir():
 def getTmpDir():
 
     td = getVaultDir()
-    prefix = config.CONFIG['tmp.dir.prefix']
+    prefix = config.CONFIG['internal']['tmp.dir.prefix']
     p = "%s%s" % (prefix, str(os.getpid()))
     path = os.path.join(td, p)
     log.verbose("tmp tmp dir: %s" % str(path))
@@ -103,8 +114,8 @@ def oswarning():
 def splitPath(path):
     (base, ext) = os.path.splitext(path)
     if ext == '':
-        ext = config.CONFIG['ext.default']
-    if ext in config.CONFIG['vexts']:
+        ext = config.CONFIG['internal']['ext.default']
+    if ext in config.CONFIG['internal']['vexts']:
         (base, ext) = os.path.splitext(base)
     return (base, ext)
 

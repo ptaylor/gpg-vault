@@ -93,20 +93,20 @@ def validateEncryptVPath(path):
 
 
 def getVPathExt(path):
-    for vext in config.CONFIG['vexts']:
+    for vext in config.CONFIG['internal']['vexts']:
         vpath = path + vext
         log.verbose("checking for vpath %s" % vpath)
         if os.path.exists(vpath):
             log.verbose("found %s" % vpath)
             return vext
     log.verbose("no files found; using default extension")
-    return config.CONFIG['vext.default']
+    return config.CONFIG['internal']['vext.default']
 
 
 def openVPath(path, destpath, cmd):
     log.verbose("openVPath %s %s %s" % (str(path), str(destpath), str(cmd)))
     (plainPath, vpath) = validateOpenVPath(path)
-    pp64 = getPassPhrase(config.CONFIG['group'], False)
+    pp64 = getPassPhrase(config.CONFIG['general']['group'], False)
     crypto.decryptFile(vpath, destpath, pp64)
     if destpath is not None and cmd is not None:
         if utils.runCommand(cmd, destpath):
@@ -119,11 +119,11 @@ def editVPath(path, destpath, cmd):
     log.verbose("editVpath plainPath=%s, vpath=%s" % (plainPath, vpath))
     if os.path.exists(vpath):
         log.verbose("editVpath vpath %s exists; decrypting" % vpath)
-        pp64 = getPassPhrase(config.CONFIG['group'], False)
+        pp64 = getPassPhrase(config.CONFIG['general']['group'], False)
         crypto.decryptFile(vpath, destpath, pp64)
     else:
         log.verbose("editVpath vpath %s does not exist" % vpath)
-        pp64 = getPassPhrase(config.CONFIG['group'], True)
+        pp64 = getPassPhrase(config.CONFIG['general']['group'], True)
     if utils.runCommand(cmd, destpath):
         file.backupFile(path)
         crypto.encryptFile(destpath, vpath, pp64)
@@ -139,7 +139,7 @@ def encryptVPath(path):
     log.verbose("encryptVPath path=%s" % (path))
     (plainPath, vpath) = validateEncryptVPath(path)
     log.verbose("encryptVpath plainPath=%s, vpath=%s" % (plainPath, vpath))
-    pp64 = getPassPhrase(config.CONFIG['group'], True)
+    pp64 = getPassPhrase(config.CONFIG['general']['group'], True)
     crypto.encryptFile(plainPath, vpath, pp64)
     file.secureDeletePath(plainPath)
 

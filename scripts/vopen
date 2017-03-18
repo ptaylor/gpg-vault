@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # MIT License
 #
@@ -25,33 +26,7 @@
 #
 
 import sys
+import gpg_vault
 
-import config
-import utils
-
-
-def verbose(m):
-    if utils.isTrue(config.CONFIG['general']['verbose']):
-        print "| " + m
-
-
-def sensitive(m):
-    if utils.isTrue(config.CONFIG['general']['verbose']) and utils.isTrue(config.CONFIG['general']['sensitive']):
-        print "** | " + m
-
-
-def info(m):
-    if not utils.isTrue(config.CONFIG['general']['quiet']):
-        message(m)
-
-
-def error(m):
-    message("error: %s" % m)
-
-
-def warning(m):
-    message("warning: %s" % str(m))
-
-
-def message(m):
-    sys.stderr.write("[%s]\n" % m)
+gpg_vault.config.init(sys.argv[1:])
+gpg_vault.command.run('open', gpg_vault.config.CONFIG['files'])

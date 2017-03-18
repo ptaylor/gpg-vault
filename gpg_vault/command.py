@@ -44,7 +44,7 @@ def run(cmd, files):
             log.verbose("running command '" + cmd + "' on file '" + file + "'")
             runForFile(cmd, file)
 
-    if config.CONFIG['kill']:
+    if utils.isTrue(config.CONFIG['general']['kill_server']):
         client.killServer()
 
     exit(0)
@@ -59,7 +59,7 @@ def runForFile(cmd, file):
             'edit': cmd_edit,
             'encrypt': cmd_encrypt,
             'clear': cmd_clear
-            }[cmd](config.CONFIG["exec." + cmd], file)
+            }[cmd](config.CONFIG['commands'][cmd], file)
     except errors.VaultSecurityError as e:
         cmd_reset()
         log.error(str(e))

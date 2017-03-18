@@ -68,7 +68,7 @@ def secureDeleteDir(path):
         log.error("Check directory for any remaining files containing sensitive data")
         return
 
-    prefix = config.CONFIG['tmp.dir.prefix']
+    prefix = config.CONFIG['internal']['tmp.dir.prefix']
     if prefix not in path:
         log.error("Directory to be deleted '%s' cannot be deleted" % str(path))
         log.error("Check directory for any remaining files containing sensitive data")
@@ -98,7 +98,7 @@ def backupFile(path):
     log.verbose("backupFile path=%s" % path)
     if not os.path.exists(path):
         return
-    backup_path = path + config.CONFIG['ext.backup']
+    backup_path = path + config.CONFIG['internal']['ext.backup']
     if os.path.exists(backup_path):
         secureDeletePath(backup_path)
     log.verbose("backupFile renaming %s to %s" % (path, backup_path))

@@ -57,10 +57,10 @@ def start():
         print "ERROR - file " + pidFile + " exists"
         exit(1)
 
-    port = config.CONFIG['server.port']
+    port = int(config.CONFIG['server']['port'])
     log_to_file("port %d" % port)
 
-    timeout_reset_all = config.CONFIG['server.timeout.reset_all']
+    timeout_reset_all = int(config.CONFIG['server']['timeout_reset_all'])
     log_to_file("timeout_reset_all %d" % timeout_reset_all)
 
     f = open(pidFile, "w")
@@ -107,7 +107,7 @@ def request_get_passphrase(group):
         tdiff = ts - p[1]
         log_to_file("time in use: %d" % tdiff)
         del PMAP[group]
-        max_time = config.CONFIG['server.timeout.reset_one']
+        max_time = int(config.CONFIG['server']['timeout_reset_one'])
         if tdiff > max_time:
             log_to_file("timeout %d > %d; removing from cache" % (tdiff, max_time))
             return "ok"

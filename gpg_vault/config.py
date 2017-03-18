@@ -28,36 +28,45 @@
 import os
 import sys
 import getopt
-import yaml
 import log
 import utils
+import ConfigParser
 
 WORK_DIR_NAME = ".gpg_vault"
 
 
 DEFAULT_CONFIG = {
 
-        'group': 'default',
-        'verbose': False,
-        'quiet': False,
-        'sensitive': False,
-        'kill': False,
+        'general': {
+            'defaultGroup': 'default',
+            'verbose': False,
+            'quiet': False,
+            'sensitive': False,
+            'kill_server': False
+        },
 
-        'vexts': ['.gpg', '.pgp', '.v'],
-        'ext.default': '.txt',
-        'vext.default': '.gpg',
-        'ext.backup': '.bak',
-        'tmp.dir.prefix': 'gpg_vault_',
+        'server': {
+            'port': 61270,
+            'timeout_reset_all': 60 * 30,
+            'timeout_reset_one': 60 * 10
+        },
 
-        'server.port': 61270,
-        'server.timeout.reset_all': 60 * 30,
-        'server.timeout.reset_one': 60 * 10,
+        'commands': {
+            'cat': 'cat',
+            'edit': 'vi',
+            'open': 'open',
+            'delete': 'srm',
+            'clear': None,
+            'encrypt': None
+        },
 
-        'exec.srm': 'srm',
-        'exec.cat': 'cat',
-        'exec.edit': 'vi',     # TODO use EDITOR
-        'exec.clear': None,
-        'exec.encrypt': None
+        'internal': {
+            'vexts': ['.gpg', '.pgp', '.v'],
+            'ext.default': '.txt',
+            'vext.default': '.gpg',
+            'ext.backup': '.bak',
+            'tmp.dir.prefix': 'gpg_vault_'
+        }
 }
 
 
@@ -75,25 +84,31 @@ def dump_config():
 def init(argv):
 
     global CONFIG
+    CONFIG = DEFAULT_CONFIG
 
     vdir = utils.getVaultDir()
     config_file = "%s/%s" % (vdir, "config")
 
+
+    config = ConfigParser.SafeConfigParser()
+
     if os.path.exists(config_file):
         try:
-            f = open(config_file)
-            config = yaml.safe_load(f)
-            f.close()
+            config.read(config_file)
 
         except Exception as e:
             log.error("cannot load config file, exception %s" % e)
             exit(1)
 
-    CONFIG = utils.merge(DEFAULT_CONFIG, config)
+    for k in CONFIG:
+        if isinstance(CONFIG[k], dict):
+            CONFIG[k] = utils.merge(CONFIG[k], getSection(config, k))
 
     process_args(argv)
 
     dump_config()
+
+
 
 
 def process_args(argv):
@@ -104,20 +119,32 @@ def process_args(argv):
     except getopt.GetoptError:
         usage()
 
+    CONFIG['general']['group'] = CONFIG['general']['default_group']
+
     for opt, arg in opts:
         if opt in ("-g", "--group"):
-            CONFIG['group'] = arg
+            CONFIG['general']['group'] = arg
         elif opt in ("-h", "--help"):
             usage()
         elif opt in ("-v", "--verbose"):
-            CONFIG['verbose'] = True
+            CONFIG['general']['verbose'] = True
         elif opt in ("-k", "--kill"):
-            CONFIG['kill'] = True
+            CONFIG['general']['kill_server'] = True
         elif opt in ("-q", "--quiet"):
-            CONFIG['quiet'] = True
+            CONFIG['general']['quiet'] = True
 
     CONFIG['files'] = args
 
+
+def getSection(config, name):
+    m = {}
+    try:
+        section = config.items(name)
+        for v in section:
+            m[v[0]] = v[1]
+    except ConfigParser.NoSectionError as e:
+        log.verbose("no config section %s" % name)
+    return m
 
 
 def usage():
