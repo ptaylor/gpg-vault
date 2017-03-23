@@ -32,8 +32,9 @@ import log
 import utils
 import ConfigParser
 
-WORK_DIR_NAME = ".gpg_vault"
+from gpg_vault import __version__
 
+WORK_DIR_NAME = ".gpg_vault"
 
 DEFAULT_CONFIG = {
 
@@ -112,7 +113,7 @@ def process_args(argv):
 
     global CONFIG
     try:
-        opts, args = getopt.getopt(argv, "g:hvqk", ["group=", "help", "verbose", "quiet", "kill"])
+        opts, args = getopt.getopt(argv, "g:hvqk", ["group=", "help", "verbose", "quiet", "kill", "version"])
     except getopt.GetoptError:
         usage()
 
@@ -129,6 +130,8 @@ def process_args(argv):
             CONFIG['general']['kill_server'] = True
         elif opt in ("-q", "--quiet"):
             CONFIG['general']['quiet'] = True
+        elif opt in ("--version"):
+            print __version__
 
     CONFIG['files'] = args
 

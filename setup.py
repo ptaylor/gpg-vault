@@ -23,11 +23,24 @@
 # SOFTWARE.
 #
 
+import os
+import ast
+
 from distutils.core import setup
+
+def get_version():
+    file_path = os.path.join(os.path.dirname(__file__), 'gpg_vault', '__init__.py')
+    with open(file_path) as file_obj:
+        root_node = ast.parse(file_obj.read())
+        for node in ast.walk(root_node):
+            if isinstance(node, ast.Assign):
+                if len(node.targets) == 1 and node.targets[0].id == "__version__":
+                    return node.value.s
+    raise RuntimeError("Unable to find version string.")
 
 setup(
         name='gpg-vault',
-        version="1.1",
+        version=get_version(),
         description='Simple GPG based file encryption utility.',
         author='Paul Taylor',
         author_email='pftylr@gmail.com',

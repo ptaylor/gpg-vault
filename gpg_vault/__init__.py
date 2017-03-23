@@ -25,6 +25,8 @@
 # SOFTWARE.
 #
 
+__version__ = '1.2'
+
 import log
 import file
 import config
