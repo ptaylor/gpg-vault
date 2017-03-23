@@ -38,7 +38,7 @@ WORK_DIR_NAME = ".gpg_vault"
 DEFAULT_CONFIG = {
 
         'general': {
-            'defaultGroup': 'default',
+            'default_group': 'default',
             'verbose': False,
             'quiet': False,
             'sensitive': False,
