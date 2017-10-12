@@ -30,6 +30,7 @@ import re
 import sys
 import os
 import time
+import signal
 
 import config
 import utils
@@ -46,6 +47,10 @@ def start():
     if not os.path.exists(vdir):
         print "ERROR - directory " + vdir + " does not exist"
         exit(1)
+
+    signal.signal(signal.SIGINT, shutdown_handler)
+    signal.signal(signal.SIGHUP, shutdown_handler)
+    signal.signal(signal.SIGQUIT, shutdown_handler)
 
     logFilePath = os.path.join(vdir, 'server.log')
     global logFile
@@ -68,6 +73,7 @@ def start():
     f.write(str(port) + "\n")
     f.close()
 
+
     server = VServer((HOST, port), timeout_reset_all, MyTCPHandler)
 
     global notShutdown
@@ -76,10 +82,23 @@ def start():
         log_to_file("waiting for request")
         server.handle_request()
 
-    os.unlink(pidFile)
-    time.sleep(1)
-    log_to_file("exiting...")
+    shutdown("requested")
 
+def shutdown(msg):
+    vdir = utils.getVaultDir()
+    log_to_file("shutting down: %s" % msg)
+    
+    pidFile = os.path.join(vdir, 'server.pid')
+    if os.path.exists(pidFile):
+        log_to_file("removing PID file %s" % pidFile)
+        os.unlink(pidFile)
+    log_to_file("exiting")
+    sys.exit(0)
+     
+
+def shutdown_handler(sig, frame):
+    log_to_file("signal %s" % sig)
+    shutdown("signal %s" % sig)
 
 def reset():
     global PMAP
