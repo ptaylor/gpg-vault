@@ -48,6 +48,7 @@ def start():
         print "ERROR - directory " + vdir + " does not exist"
         exit(1)
 
+    signal.signal(signal.SIGTERM, shutdown_handler)
     signal.signal(signal.SIGINT, shutdown_handler)
     signal.signal(signal.SIGHUP, shutdown_handler)
     signal.signal(signal.SIGQUIT, shutdown_handler)
