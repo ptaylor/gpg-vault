@@ -53,10 +53,11 @@ DEFAULT_CONFIG = {
         },
 
         'commands': {
-            'cat': 'cat',
-            'edit': 'vi',
-            'open': 'open',
-            'delete': 'srm',
+            'cat': 'cat {}',
+            'edit': 'vi {}',
+            'open': 'open {}',
+            'delete_file': 'rm -f {}',
+            'delete_dir': 'rmdir {}',
             'clear': None,
             'encrypt': None
         },

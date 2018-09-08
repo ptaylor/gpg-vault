@@ -59,7 +59,7 @@ def runForFile(cmd, file):
             'edit': cmd_edit,
             'encrypt': cmd_encrypt,
             'clear': cmd_clear
-            }[cmd](config.CONFIG['commands'][cmd], file)
+            }[cmd](cmd, file)
     except errors.VaultSecurityError as e:
         cmd_reset()
         log.error(str(e))
@@ -91,7 +91,7 @@ def cmd_open(cmd, path):
         log.verbose("cmd_open " + str(cmd) + ", " + str(path))
         vault.openVPath(path, tmppath, cmd)
     finally:
-        file.secureDeleteDir(tmpdir)
+        file.deleteDir(tmpdir)
 
 
 def cmd_edit(cmd, path):
@@ -101,7 +101,7 @@ def cmd_edit(cmd, path):
         tmppath = os.path.join(tmpdir, str(os.getpid()))
         vault.editVPath(path, tmppath, cmd)
     finally:
-        file.secureDeleteDir(tmpdir)
+        file.deleteDir(tmpdir)
 
 
 def cmd_encrypt(cmd, path):

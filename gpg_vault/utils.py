@@ -44,23 +44,32 @@ def isFalse(b):
     return not isTrue(b)
 
 
-def runCommand(cmd, path):
-    log.verbose("runCommand %s %s" % (cmd, path))
+def runCommand(cmdName, arg):
+    log.verbose("runCommand %s %s" % (cmdName, arg))
     before_mtime = 0
-    if os.path.exists(path):
-        before_mtime = os.path.getmtime(path)
+
+    cmd = config.CONFIG['commands'][cmdName]
+    if cmd is None:
+        log.error("no command configured for 'deleteFile'");
+        log.warning("path " + str(path) + " was not deleted")
+        return
+
+    cmdArgs = cmd.replace("{}", arg).split()
+    log.verbose("cmdArgs: %s" % str(cmdArgs))
+    if os.path.exists(arg):
+        before_mtime = os.path.getmtime(arg)
     try:
-        ret = subprocess.call(args=[cmd, path], shell=False)
+        ret = subprocess.call(args=cmdArgs, shell=False)
         log.verbose("ret: " + str(ret))
         if ret != 0:
             log.warning("process exited with error")
     except Exception as e:
-        log.error("error running command '%s %s' -> %s" % (cmd, path, str(e)))
+        log.error("error running command '%s %s' -> %s" % (cmd, arg, str(e)))
         return False
 
-    if not os.path.exists(path):
+    if not os.path.exists(arg):
         return False
-    after_mtime = os.path.getmtime(path)
+    after_mtime = os.path.getmtime(arg)
     log.verbose("before mtime: " + str(before_mtime))
     log.verbose("after mtime: " + str(after_mtime))
     return after_mtime > before_mtime

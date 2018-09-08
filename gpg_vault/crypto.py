@@ -66,7 +66,7 @@ def encryptFile(srcPath, destPath, pp64):
     passphrase = str(pp64.decode('base64'))
     log.sensitive("passphrase |%s|" % passphrase)
     if os.path.exists(destPath):
-        file.secureDeletePath(destPath)
+        file.deletePath(destPath)
     args = ['gpg', '--quiet', '--batch',
             '-c', '--symmetric', '--passphrase-fd', '0',
             '--output', destPath, srcPath]

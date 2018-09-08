@@ -132,7 +132,7 @@ def editVPath(path, destpath, cmd):
             log.warning("file has not been modified")
         else:
             log.warning("file has not been created")
-        file.secureDeletePath(destpath)
+    file.deletePath(destpath)
 
 
 def encryptVPath(path):
@@ -141,7 +141,7 @@ def encryptVPath(path):
     log.verbose("encryptVpath plainPath=%s, vpath=%s" % (plainPath, vpath))
     pp64 = getPassPhrase(config.CONFIG['general']['group'], True)
     crypto.encryptFile(plainPath, vpath, pp64)
-    file.secureDeletePath(plainPath)
+    file.deletePath(plainPath)
 
 
 def getPassPhrase(group, confirm):
