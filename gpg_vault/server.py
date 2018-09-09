@@ -143,6 +143,10 @@ def request_error(msg):
     reset()
     return "error " + msg
 
+def request_ping():
+    log_to_file("ping")
+    return "ok"
+
 
 def request_quit():
     log_to_file("quit")
@@ -198,6 +202,8 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             return request_reset()
         elif cmds[0] == "quit":
             return request_quit()
+        elif cmds[0] == "ping":
+            return request_ping()
         else:
             return request_error("unknown command")
 

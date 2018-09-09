@@ -37,6 +37,8 @@ import file
 
 def run(cmd, files):
 
+    client.sendRequest(['ping'])
+
     if files is None:
         runForFile(cmd, None)
     else:

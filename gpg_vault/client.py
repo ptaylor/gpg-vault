@@ -29,6 +29,9 @@ import re
 import os
 import subprocess
 import time
+import sys
+import socket
+import errno
 
 import config
 import vault
@@ -41,21 +44,41 @@ def killServer():
     log.info("killing server")
     sendRequest(['quit'])
 
+def connect(sock, port):
+
+    try:
+        log.verbose("connecting to server on port %d" % port)
+        sock.connect(('localhost', int(port)))
+    except socket.error as e:
+        if e.errno == errno.ECONNREFUSED:
+            return False
+        log.error("error connecting to server: %s" % str(e))
+        raise e
+    return True   
 
 def sendRequest(args):
 
     log.verbose("sendRequest args=%s" % args)
     req = " ".join(args)
-    port = getServerPort(utils.getVaultDir())
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        log.verbose("connecting to server on port %d" % port)
-        sock.connect(('localhost', int(port)))
-        log.verbose("sending request to server")
-        sock.sendall(req + "\n")
-        reply = sock.recv(1024)
-    finally:
-        sock.close()
+    tryAgain = True
+    while tryAgain:
+        tryAgain = False
+        port = getServerPort(utils.getVaultDir())
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            if connect(sock, port):
+                log.verbose("sending request to server")
+                sock.sendall(req + "\n")
+                reply = sock.recv(1024) 
+            else:
+                # Assume the server is not running
+                log.info("cannot connect; trying again")
+                time.sleep(1)
+                deleteServerPort(utils.getVaultDir())
+                tryAgain = True;
+                continue
+        finally:
+            sock.close()
 
     ret = re.split('\s+', reply)
     if ret is None or len(ret) < 1:
@@ -99,3 +122,7 @@ def getServerPort(vdir):
     port = int(lines[1])
     log.verbose("found server port=%d" % port)
     return port
+
+def deleteServerPort(vdir):
+    pidFile = os.path.join(vdir, 'server.pid')
+    os.unlink(pidFile)
