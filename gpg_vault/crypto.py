@@ -38,7 +38,7 @@ def decryptFile(vpath, destPath, pp64):
     log.verbose("decyptFile vpath=%s destPath=%s" % (vpath, destPath))
     passphrase = str(pp64.decode('base64'))
     log.sensitive("passphrase |" + passphrase + "|")
-    args = ['gpg', '--quiet', '--batch', '--decrypt', '--passphrase-fd', '0']
+    args = ['gpg', '--quiet', '--batch', '--ignore-mdc-error', '--decrypt', '--passphrase-fd', '0']
     if destPath is not None:
         args.extend(['--output', destPath])
     args.append(vpath)
