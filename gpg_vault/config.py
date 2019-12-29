@@ -82,7 +82,7 @@ CONFIG = {
 
 def dump_config():
     log.verbose("configuration:")
-    log.verbose("\n%s" % utils.dict2str(CONFIG))
+    log.verbose(f"\n{utils.dict2str(CONFIG)}")
 
 
 def init(argv):
@@ -100,7 +100,7 @@ def init(argv):
             config.read(config_file)
 
         except Exception as e:
-            log.error("cannot load config file, exception %s" % e)
+            log.error(f"cannot load config file, exception {e}")
             exit(1)
 
     for k in CONFIG:
@@ -146,7 +146,7 @@ def getSection(config, name):
         for v in section:
             m[v[0]] = v[1]
     except configparser.NoSectionError as e:
-        log.verbose("no config section %s" % name)
+        log.verbose(f"no config section {name}")
     return m
 
 

@@ -53,33 +53,33 @@ def b642str(s):
     return base64.b64decode(s).decode('utf-8')
    
 def runCommand(cmdName, arg):
-    log.verbose("runCommand %s %s" % (cmdName, arg))
+    log.verbose(f"runCommand {cmdName} {arg}")
     before_mtime = 0
 
     cmd = config.CONFIG['commands'][cmdName]
     if cmd is None:
         log.error("no command configured for 'deleteFile'");
-        log.warning("path " + str(path) + " was not deleted")
+        log.warning(f"path {path} was not deleted")
         return
 
     cmdArgs = cmd.replace("{}", arg).split()
-    log.verbose("cmdArgs: %s" % str(cmdArgs))
+    log.verbose(f"cmdArgs: {cmdArgs}")
     if os.path.exists(arg):
         before_mtime = os.path.getmtime(arg)
     try:
         ret = subprocess.call(args=cmdArgs, shell=False)
-        log.verbose("ret: " + str(ret))
+        log.verbose(f"ret: {ret}")
         if ret != 0:
             log.warning("process exited with error")
     except Exception as e:
-        log.error("error running command '%s %s' -> %s" % (cmd, arg, str(e)))
+        log.error(f"error running command '{cmd} {arg}' -> {e}")
         return False
 
     if not os.path.exists(arg):
         return False
     after_mtime = os.path.getmtime(arg)
-    log.verbose("before mtime: " + str(before_mtime))
-    log.verbose("after mtime: " + str(after_mtime))
+    log.verbose(f"before mtime: {before_mtime}")
+    log.verbose(f"after mtime: {after_mtime}")
     return after_mtime > before_mtime
 
 
@@ -87,20 +87,20 @@ def getVaultDir():
 
     home = os.path.expanduser("~")
 
-    log.verbose("home dir: %s" % home)
+    log.verbose(f"home dir: {home}")
 
     if not os.path.exists(home):
-        error("Directory %s does not exist" % home)
+        error(f"Directory {home} does not exist")
 
     t = config.WORK_DIR_NAME
     vdir = os.path.join(home, t)
-    log.verbose("vault directory: %s" % str(vdir))
+    log.verbose(f"vault directory: {vdir}")
 
     if not os.path.exists(vdir):
-        log.verbose("creating directory %s" % str(vdir))
+        log.verbose(f"creating directory {vdir}")
         os.mkdir(vdir)
         if not os.path.exists(vdir):
-            log.error("faild to create directory %s" % str(vdir))
+            log.error(f"failed to create directory {vdir}")
 
     return vdir
 
@@ -111,12 +111,12 @@ def getTmpDir():
     prefix = config.CONFIG['internal']['tmp.dir.prefix']
     p = "%s%s" % (prefix, str(os.getpid()))
     path = os.path.join(td, p)
-    log.verbose("tmp tmp dir: %s" % str(path))
+    log.verbose(f"tmp tmp dir: {path}")
     if os.path.exists(path):
-        log.error("tempory directory " + str(path) + " already exists")
+        log.error(f"tempory directory {path} already exists")
     os.mkdir(path)
     if not os.path.exists(path):
-        log.error("tempory directory " + str(path) + " was not created")
+        log.error(f"tempory directory {path} was not created")
     return path
 
 

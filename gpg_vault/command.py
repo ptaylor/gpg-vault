@@ -76,12 +76,12 @@ def runForFile(cmd, file):
         exit(1)
     except Exception as e:
         utils.log_exception(e)
-        log.error("Unexpected error. " + str(e))
+        log.error(f"Unexpected error. {e}")
         exit(1)
 
 
 def cmd_cat(cmd, path):
-    log.verbose("cmd_cat " + str(cmd) + ", " + str(path))
+    log.verbose(f"cmd_cat {cmd}, {path}")
     vault.openVPath(path, None, None)
     print("")
     utils.oswarning()
@@ -91,14 +91,14 @@ def cmd_open(cmd, path):
     tmpdir = utils.getTmpDir()
     try:
         tmppath = os.path.join(tmpdir, str(os.getpid()))
-        log.verbose("cmd_open " + str(cmd) + ", " + str(path))
+        log.verbose(f"cmd_open {cmd}, {path}")
         vault.openVPath(path, tmppath, cmd)
     finally:
         file.deleteDir(tmpdir)
 
 
 def cmd_edit(cmd, path):
-    log.verbose("cmd_edit " + str(cmd) + ", " + str(path))
+    log.verbose(f"cmd_edit {cmd}, {path}")
     tmpdir = utils.getTmpDir()
     try:
         tmppath = os.path.join(tmpdir, str(os.getpid()))
@@ -108,17 +108,17 @@ def cmd_edit(cmd, path):
 
 
 def cmd_encrypt(cmd, path):
-    log.verbose("cmd_encrypt cmd=" + str(cmd) + ", path=" + str(path))
+    log.verbose(f"cmd_encrypt cmd={cmd}, path={path}")
     vault.encryptVPath(path)
 
 
 def cmd_clear(cmd, path):
-    log.verbose("cmd_clear " + str(cmd) + ", " + str(path))
+    log.verbose(f"cmd_clear {cmd}, {path}")
     cmd_reset()
 
 
 def cmd_unknown(cmd, path):
-    usage("unknown option '" + str(cmd) + "'")
+    usage(f"unknown option '{cmd}'")
 
 
 def cmd_reset():

@@ -48,18 +48,18 @@ def killServer():
 def connect(sock, port):
 
     try:
-        log.verbose("connecting to server on port %d" % port)
+        log.verbose(f"connecting to server on port {port}")
         sock.connect(('localhost', int(port)))
     except socket.error as e:
         if e.errno == errno.ECONNREFUSED:
             return False
-        log.error("error connecting to server: %s" % str(e))
+        log.error(f"error connecting to server: {e}")
         raise e
     return True   
 
 def sendRequest(args):
 
-    log.verbose("sendRequest args=%s" % args)
+    log.verbose(f"sendRequest args={args}")
     req = " ".join(args)
     tryAgain = True
     while tryAgain:
@@ -85,29 +85,29 @@ def sendRequest(args):
     if ret is None or len(ret) < 1:
         raise VaultError('unable to process reply')
 
-    log.sensitive("response: %s" % str(ret))
+    log.sensitive(f"response: {ret}")
     if ret[0] == 'ok':
         log.verbose('reply ok')
         return ret[1:]
     elif ret[0] == 'error':
-        log.verbose('reply %s' % str(ret))
+        log.verbose(f"reply {ret}")
         raise errors.VaultSecurityError(str(ret))
     else:
-        log.verbose("unexpected reply %s" % str(ret))
+        log.verbose(f"unexpected reply {ret}")
         raise errors.VaultError('unable to process reply')
 
 
 def getServerPort(vdir):
 
-    log.verbose("getServerPort vdir=%s" % vdir)
+    log.verbose(f"getServerPort vdir={vdir}")
     pidFile = os.path.join(vdir, 'server.pid')
     if not os.path.exists(pidFile):
-        log.verbose("pidfile %s does not exist" % pidFile)
+        log.verbose(f"pidfile {pidFile} does not exist")
         log.info("launching server")
         args = ['gpg-vault-server', vdir]
         global pid
         pid = subprocess.Popen(args=args, shell=False).pid
-        log.verbose("pid: %d" % pid)
+        log.verbose(f"pid: {pid}")
 
     count = 10
     while not os.path.exists(pidFile):
@@ -117,11 +117,11 @@ def getServerPort(vdir):
     f = open(pidFile, "r")
     lines = f.readlines()
     if lines is None or len(lines) != 2:
-        log.error("cannot read pidFile %s" % pidFile)
+        log.error(f"cannot read pidFile {pidFile}")
         exit(1)
 
     port = int(lines[1])
-    log.verbose("found server port=%d" % port)
+    log.verbose(f"found server port={port}")
     return port
 
 def deleteServerPort(vdir):

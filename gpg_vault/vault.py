@@ -39,32 +39,32 @@ from gpg_vault import config, utils, log, client, crypto, errors, file
 
 def validateVPaths(path):
     (plainPath, vpath) = validateVPath(path)
-    log.verbose("validating plainPath=%s, vpath=%s" % (plainPath, vpath))
+    log.verbose(f"validating plainPath={plainPath}, vpath={vpath}")
     if os.path.islink(plainPath):
         raise errors.VaultError("'" + plainPath + "' is a symbolic link")
     if os.path.exists(plainPath) and os.path.exists(vpath):
         if os.path.getmtime(plainPath) > os.path.getmtime(vpath):
-            older = "%s is more recent" % plainPath
+            older = f"{plainPath} is more recent"
         else:
-            older = "%s is more recent" % vpath
-        raise errors.VaultError("both '%s' and '%s' exist (%s)" % (plainPath, vpath, older))
+            older = f"{vpath} is more recent"
+        raise errors.VaultError(f"both '{plainPath}' and '{vpath}' exist ({older})")
     if os.path.islink(vpath):
-        raise errors.VaultError("'%s' is a symbolic link" % vpath)
+        raise errors.VaultError(f"'{vpath}' is a symbolic link")
     return (plainPath, vpath)
 
 
 def validateVPath(path):
-    log.verbose("validating path='%s'" % path)
+    log.verbose(f"validating path='{path}'")
     (base, ext) = utils.splitPath(path)
-    log.verbose("base=%s, ext=%s" % (base, ext))
+    log.verbose(f"base={base}, ext={ext}")
     (vext) = getVPathExt(base + ext)
-    log.verbose("vpath ext=%s" % vext)
+    log.verbose(f"vpath ext={vext}")
     if base == '':
-        raise errors.VaultError("Invalid path '%s' (base)" % path)
+        raise errors.VaultError(f"Invalid path '{path}' (base)")
     if ext == '':
-        raise errors.VaultError("Invalid path '%s' (ext)" % path)
+        raise errors.VaultError(f"Invalid path '{path}' (ext)")
     if vext == '':
-        raise errors.VaultError("Invalid path '%s' (vext)" % path)
+        raise errors.VaultError(f"Invalid path '{path}' (vext)")
     return (base + ext, base + ext + vext)
 
 
@@ -87,25 +87,25 @@ def validateEditVPath(path):
 def validateEncryptVPath(path):
     (plainPath, vpath) = validateVPaths(path)
     if not os.path.exists(plainPath):
-        raise errors.VaultError("'%s' does not exists" % plainPath)
+        raise errors.VaultError(f"'{plainPath}' does not exists")
     if os.path.exists(vpath):
-        raise errors.VaultError("'%s' exists" % vpath)
+        raise errors.VaultError(f"'{vpath}' exists")
     return (plainPath, vpath)
 
 
 def getVPathExt(path):
     for vext in config.CONFIG['internal']['vexts']:
         vpath = path + vext
-        log.verbose("checking for vpath %s" % vpath)
+        log.verbose(f"checking for vpath {vpath}")
         if os.path.exists(vpath):
-            log.verbose("found %s" % vpath)
+            log.verbose(f"found {vpath}")
             return vext
     log.verbose("no files found; using default extension")
     return config.CONFIG['internal']['vext.default']
 
 
 def openVPath(path, destpath, cmd):
-    log.verbose("openVPath %s %s %s" % (str(path), str(destpath), str(cmd)))
+    log.verbose(f"openVPath {path} {destpath} {cmd}")
     (plainPath, vpath) = validateOpenVPath(path)
     pp64 = getPassPhrase(config.CONFIG['general']['group'], False)
     crypto.decryptFile(vpath, destpath, pp64)
@@ -115,15 +115,15 @@ def openVPath(path, destpath, cmd):
 
 
 def editVPath(path, destpath, cmd):
-    log.verbose("editVPath %s %s %s" % (path, destpath, cmd))
+    log.verbose(f"editVPath {path} {destpath} {cmd}")
     (plainPath, vpath) = validateEditVPath(path)
-    log.verbose("editVpath plainPath=%s, vpath=%s" % (plainPath, vpath))
+    log.verbose(f"editVpath plainPath={plainPath}, vpath={vpath}")
     if os.path.exists(vpath):
-        log.verbose("editVpath vpath %s exists; decrypting" % vpath)
+        log.verbose(f"editVpath vpath {vpath} exists; decrypting")
         pp64 = getPassPhrase(config.CONFIG['general']['group'], False)
         crypto.decryptFile(vpath, destpath, pp64)
     else:
-        log.verbose("editVpath vpath %s does not exist" % vpath)
+        log.verbose(f"editVpath vpath {vpath} does not exist")
         pp64 = getPassPhrase(config.CONFIG['general']['group'], True)
     if utils.runCommand(cmd, destpath):
         file.backupFile(path)
@@ -137,20 +137,20 @@ def editVPath(path, destpath, cmd):
 
 
 def encryptVPath(path):
-    log.verbose("encryptVPath path=%s" % (path))
+    log.verbose(f"encryptVPath path={path}")
     (plainPath, vpath) = validateEncryptVPath(path)
-    log.verbose("encryptVpath plainPath=%s, vpath=%s" % (plainPath, vpath))
+    log.verbose(f"encryptVpath plainPath={plainPath}, vpath={vpath}")
     pp64 = getPassPhrase(config.CONFIG['general']['group'], True)
     crypto.encryptFile(plainPath, vpath, pp64)
     file.deletePath(plainPath)
 
 
 def getPassPhrase(group, confirm):
-    log.verbose("getting passphrase group='%s', comfirm=%s" % (group, confirm))
+    log.verbose(f"getting passphrase group={group}, comfirm={confirm}")
     pp = client.sendRequest(['get', group])
     if len(pp) >= 1:
         log.verbose("got passphrase from server")
-        log.sensitive("passphrase (base64): %s" % str(pp[0]))
+        log.sensitive(f"passphrase (base64): {pp[0]}")
         return pp[0]
     pp = ''
     try:
@@ -172,8 +172,8 @@ def getPassPhrase(group, confirm):
         del pp
         return pp64
     except EOFError as e:
-        log.verbose("exception raised: " + str(e))
+        log.verbose(f"exception raised: {e}")
         raise errors.VaultQuit(str(e))
     except Exception as e:
-        log.verbose("exception raised: " + str(e))
+        log.verbose(f"exception raised: {e}")
         raise errors.VaultQuit(str(e))

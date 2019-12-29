@@ -58,7 +58,7 @@ def start():
     logFilePath = os.path.join(vdir, 'server.log')
     global logFile
     logFile = open(logFilePath, "a")
-    log_to_file("starting; pid %d" % os.getpid())
+    log_to_file(f"starting; pid {os.getpid()}")
 
     pidFile = os.path.join(vdir, 'server.pid')
     if os.path.exists(pidFile):
@@ -66,10 +66,10 @@ def start():
         exit(1)
 
     port = int(config.CONFIG['server']['port'])
-    log_to_file("port %d" % port)
+    log_to_file(f"port {port}")
 
     timeout_reset_all = int(config.CONFIG['server']['timeout_reset_all'])
-    log_to_file("timeout_reset_all %d" % timeout_reset_all)
+    log_to_file(f"timeout_reset_all {timeout_reset_all}")
 
     f = open(pidFile, "w")
     f.write(str(os.getpid()) + "\n")
@@ -89,19 +89,19 @@ def start():
 
 def shutdown(msg):
     vdir = utils.getVaultDir()
-    log_to_file("shutting down: %s" % msg)
+    log_to_file(f"shutting down: {msg}")
     
     pidFile = os.path.join(vdir, 'server.pid')
     if os.path.exists(pidFile):
-        log_to_file("removing PID file %s" % pidFile)
+        log_to_file(f"removing PID file {pidFile}")
         os.unlink(pidFile)
     log_to_file("exiting")
     sys.exit(0)
      
 
 def shutdown_handler(sig, frame):
-    log_to_file("signal %s" % sig)
-    shutdown("signal %s" % sig)
+    log_to_file(f"signal {sig}")
+    shutdown(f"signal {sig}")
 
 def reset():
     global PMAP
@@ -113,7 +113,7 @@ def reset():
 def request_set_passphrase(group, pw):
     global PMAP
     ts = time.time()
-    log_to_file("request_set_passphrase group=%s, timestamp=%d" % (group, ts))
+    log_to_file(f"request_set_passphrase group={group}, timestamp={ts}")
 
     PMAP[group] = (pw, ts)
     return "ok"
@@ -122,16 +122,16 @@ def request_set_passphrase(group, pw):
 def request_get_passphrase(group):
     global PMAP
     ts = time.time()
-    log_to_file("request_get_passphrase group=%s, timestamp=%d" % (group, ts))
+    log_to_file(f"request_get_passphrase group={group}, timestamp={ts}")
     if group in PMAP:
         log_to_file("have cached passphrase")
         p = PMAP[group]
         tdiff = ts - p[1]
-        log_to_file("time in use: %d" % tdiff)
+        log_to_file(f"time in use: {tdiff}")
         del PMAP[group]
         max_time = int(config.CONFIG['server']['timeout_reset_one'])
         if tdiff > max_time:
-            log_to_file("timeout %d > %d; removing from cache" % (tdiff, max_time))
+            log_to_file(f"timeout {tdiff} > {max_time}; removing from cache")
             return "ok"
         PMAP[group] = (p[0], ts)
         return "ok " + p[0]
@@ -166,14 +166,14 @@ def request_reset():
 def log_to_file(m):
     now = datetime.datetime.now()
     global logFile
-    logFile.write("[%s] %s\n" % (str(now), str(m)))
+    logFile.write(f"[{now}] {m}\n")
     logFile.flush()
 
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def __init__(self, request, client_address, server):
-        log_to_file("request from client %s" % str(client_address))
+        log_to_file(f"request from client {client_address}")
         socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
 
     def setup(self):

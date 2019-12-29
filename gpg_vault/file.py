@@ -38,13 +38,13 @@ from gpg_vault import vault, log, config, utils, errors
 
 def deletePath(path):
 
-    log.verbose("deletePath path=%s" % path)
+    log.verbose(f"deletePath path={path}")
     if not os.path.exists(path):
         log.info("path " + path + " does not exist")
     else:
         utils.runCommand('delete_file', path)
         if os.path.exists(path):
-            raise errors.VaultError("error deleting file %s" % (path))
+            raise errors.VaultError(f"error deleting file {path}")
 
 
 def deleteDir(path):
@@ -52,26 +52,26 @@ def deleteDir(path):
     if not re.match("^/\w+/\w+", path):
       raise errors.VaultError(f"invalid vault directory")
 
-    log.verbose("deleteDir path=%s" % path)
+    log.verbose(f"deleteDir path={path}")
 
     if not os.path.exists(path):
-        log.info("path " + str(path) + " does not exist")
+        log.info(f"path {path} does not exist")
     else:
         utils.runCommand('delete_dir', path)
         if os.path.exists(path):
-            raise errors.VaultError("error deleting directory %s" % (path))
+            raise errors.VaultError(f"error deleting directory {path}")
 
 
 def backupFile(path):
-    log.verbose("backupFile path=%s" % path)
+    log.verbose(f"backupFile path={path}")
     if not os.path.exists(path):
         return
     backup_path = path + config.CONFIG['internal']['ext.backup']
     if os.path.exists(backup_path):
         deletePath(backup_path)
-    log.verbose("backupFile renaming %s to %s" % (path, backup_path))
+    log.verbose(f"backupFile renaming {path} to {backup_path}")
     os.rename(path, backup_path)
     if os.path.exists(path):
-        raise VaultError("error creating backup of %s; file still exists after renaming to %s" % (path, backup_path))
+        raise VaultError(f"error creating backup of {path}; file still exists after renaming to {backup_path}")
     if not os.path.exists(backup_path):
-        raise VaultError("error creating backup of %s; backup file %s not created" % (path, backup_path))
+        raise VaultError(f"error creating backup of {path}; backup file {backup_path} not created")

@@ -36,19 +36,19 @@ import os
 from gpg_vault import errors, log, config, file, utils
 
 def decryptFile(vpath, destPath, pp64):
-    log.verbose("decyptFile vpath=%s destPath=%s" % (vpath, destPath))
+    log.verbose(f"decyptFile vpath={vpath} destPath={destPath}")
     passphrase = utils.b642str(pp64)
     log.sensitive(f"passphrase |{passphrase}|")
     args = ['gpg', '--quiet', '--batch', '--ignore-mdc-error', '--decrypt', '--passphrase-fd', '0']
     if destPath is not None:
         args.extend(['--output', destPath])
     args.append(vpath)
-    log.verbose("args: " + str(args))
+    log.verbose(f"args: {args}")
     gpgErrorLog = os.path.join(utils.getVaultDir(), "gpg.error.log")
     try:
         gpgError = open(gpgErrorLog, "a")
     except IOError:
-        raise errors.VaultError("Unable to open gpg error log file '%s'" % gpgErrorLog)
+        raise errors.VaultError(f"Unable to open gpg error log file '{gpgErrorlog}'")
     try:
         gpg = subprocess.Popen(args=args, shell=False, stdin=subprocess.PIPE, stderr=gpgError)
         gpg.stdin.write(passphrase.encode('utf-8'))
@@ -63,17 +63,17 @@ def decryptFile(vpath, destPath, pp64):
 
 
 def encryptFile(srcPath, destPath, pp64):
-    log.verbose("encyptFile srcPath=%s destPath=%s" % (srcPath, destPath))
+    log.verbose(f"encyptFile srcPath={srcPath} destPath={destPath}")
     passphrase = utils.b642str(pp64)
-    log.sensitive("passphrase |%s|" % passphrase)
+    log.sensitive(f"passphrase |{passphrase}|")
     if os.path.exists(destPath):
         file.deletePath(destPath)
     args = ['gpg', '--quiet', '--batch',
             '-c', '--symmetric', '--passphrase-fd', '0',
             '--output', destPath, srcPath]
-    log.verbose("args: %s" % str(args))
+    log.verbose(f"args: {args}")
     gpgErrorLog = os.path.join(utils.getVaultDir(), "gpg.stderr.log")
-    log.info("encrypting file %s to %s" % (srcPath, destPath))
+    log.info(f"encrypting file {srcPath} to {destPath}")
     try:
         gpgError = open(gpgErrorLog, "a")
     except IOError:
