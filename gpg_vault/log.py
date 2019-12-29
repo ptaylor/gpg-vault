@@ -26,19 +26,19 @@
 
 import sys
 
-import config
-import utils
+#import gpg_vault.config
+#import gpg_vault.utils
 
+from gpg_vault import config, utils
 
 def verbose(m):
     if utils.isTrue(config.CONFIG['general']['verbose']):
-        print "| " + m
+        print(f"| {m}")
 
 
 def sensitive(m):
     if utils.isTrue(config.CONFIG['general']['verbose']) and utils.isTrue(config.CONFIG['general']['sensitive']):
-        print "** | " + m
-
+        print(f"** | {m}")
 
 def info(m):
     if not utils.isTrue(config.CONFIG['general']['quiet']):
@@ -46,12 +46,12 @@ def info(m):
 
 
 def error(m):
-    message("error: %s" % m)
+    message(f"error: {m}")
 
 
 def warning(m):
-    message("warning: %s" % str(m))
+    message(f"warning: {m}")
 
 
 def message(m):
-    sys.stderr.write("[%s]\n" % m)
+    sys.stderr.write(f"[{m}]\n")

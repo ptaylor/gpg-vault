@@ -28,11 +28,12 @@
 import os
 import sys
 import getopt
-import log
-import utils
-import ConfigParser
+#import gpg_vault.log
+#import gpg_vault.utils
+import configparser
 
-from gpg_vault import __version__
+from .  import utils, log, __version__
+#from gpg_vault import __version__
 
 WORK_DIR_NAME = ".gpg_vault"
 
@@ -43,7 +44,8 @@ DEFAULT_CONFIG = {
             'verbose': False,
             'quiet': False,
             'sensitive': False,
-            'kill_server': False
+            'kill_server': False,
+            'sensitive': True
         },
 
         'server': {
@@ -57,7 +59,7 @@ DEFAULT_CONFIG = {
             'edit': 'vi {}',
             'open': 'open {}',
             'delete_file': 'rm -f {}',
-            'delete_dir': 'rmdir {}',
+            'delete_dir': 'rm -rf {}',
             'clear': None,
             'encrypt': None
         },
@@ -91,7 +93,7 @@ def init(argv):
     vdir = utils.getVaultDir()
     config_file = "%s/%s" % (vdir, "config")
 
-    config = ConfigParser.SafeConfigParser()
+    config = configparser.SafeConfigParser()
 
     if os.path.exists(config_file):
         try:
@@ -132,7 +134,7 @@ def process_args(argv):
         elif opt in ("-q", "--quiet"):
             CONFIG['general']['quiet'] = True
         elif opt in ("--version"):
-            print __version__
+            print("{__version__}")
 
     CONFIG['files'] = args
 
@@ -143,11 +145,11 @@ def getSection(config, name):
         section = config.items(name)
         for v in section:
             m[v[0]] = v[1]
-    except ConfigParser.NoSectionError as e:
+    except configparser.NoSectionError as e:
         log.verbose("no config section %s" % name)
     return m
 
 
 def usage():
-    print "USAGE: ..."
+    print("USAGE: ...")
     sys.exit(1)

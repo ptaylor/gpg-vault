@@ -26,13 +26,15 @@
 
 import os
 import subprocess
+import re
 
-import vault
-import log
-import config
-import utils
-import errors
+#import gpg_vault.vault
+#import gpg_vault.log
+#import gpg_vault.config
+#import gpg_vault.utils
+#import gpg_vault.errors
 
+from gpg_vault import vault, log, config, utils, errors
 
 def deletePath(path):
 
@@ -46,6 +48,9 @@ def deletePath(path):
 
 
 def deleteDir(path):
+
+    if not re.match("^/\w+/\w+", path):
+      raise errors.VaultError(f"invalid vault directory")
 
     log.verbose("deleteDir path=%s" % path)
 

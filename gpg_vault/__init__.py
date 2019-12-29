@@ -27,12 +27,12 @@
 
 __version__ = '1.3'
 
-import log
-import file
-import config
-import utils
-import client
-import vault
-import command
-import crypto
-import errors
+import gpg_vault.log
+import gpg_vault.file
+import gpg_vault.config
+import gpg_vault.utils
+import gpg_vault.client
+import gpg_vault.vault
+import gpg_vault.command
+import gpg_vault.crypto
+import gpg_vault.errors

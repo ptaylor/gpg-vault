@@ -27,17 +27,18 @@
 import subprocess
 import os
 
-import errors
-import log
-import config
-import file
-import utils
+#import gpg_vault.errors
+#import gpg_vault.log
+#import gpg_vault.config
+#import gpg_vault.file
+#import gpg_vault.utils
 
+from gpg_vault import errors, log, config, file, utils
 
 def decryptFile(vpath, destPath, pp64):
     log.verbose("decyptFile vpath=%s destPath=%s" % (vpath, destPath))
-    passphrase = str(pp64.decode('base64'))
-    log.sensitive("passphrase |" + passphrase + "|")
+    passphrase = utils.b642str(pp64)
+    log.sensitive(f"passphrase |{passphrase}|")
     args = ['gpg', '--quiet', '--batch', '--ignore-mdc-error', '--decrypt', '--passphrase-fd', '0']
     if destPath is not None:
         args.extend(['--output', destPath])
@@ -50,7 +51,7 @@ def decryptFile(vpath, destPath, pp64):
         raise errors.VaultError("Unable to open gpg error log file '%s'" % gpgErrorLog)
     try:
         gpg = subprocess.Popen(args=args, shell=False, stdin=subprocess.PIPE, stderr=gpgError)
-        gpg.stdin.write(passphrase)
+        gpg.stdin.write(passphrase.encode('utf-8'))
         gpg.stdin.close()
         gpg.wait()
         if gpg.returncode != 0:
@@ -63,7 +64,7 @@ def decryptFile(vpath, destPath, pp64):
 
 def encryptFile(srcPath, destPath, pp64):
     log.verbose("encyptFile srcPath=%s destPath=%s" % (srcPath, destPath))
-    passphrase = str(pp64.decode('base64'))
+    passphrase = utils.b642str(pp64)
     log.sensitive("passphrase |%s|" % passphrase)
     if os.path.exists(destPath):
         file.deletePath(destPath)
@@ -79,7 +80,7 @@ def encryptFile(srcPath, destPath, pp64):
         raise errors.VaultError("Unable to open gpg error log file '" + gpgErrorLog + "'")
     try:
         gpg = subprocess.Popen(args=args, shell=False, stdin=subprocess.PIPE, stderr=gpgError)
-        gpg.stdin.write(passphrase)
+        gpg.stdin.write(passphrase.encode('utf-8'))
         gpg.stdin.close()
         gpg.wait()
         if gpg.returncode != 0:

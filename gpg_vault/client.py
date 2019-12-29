@@ -33,12 +33,13 @@ import sys
 import socket
 import errno
 
-import config
-import vault
-import log
-import errors
-import utils
+#import gpg_vault.config
+#import gpg_vault.vault
+#import gpg_vault.log
+#import gpg_vault.errors
+#import gpg_vault.utils
 
+from gpg_vault import config, vault, log, errors, utils
 
 def killServer():
     log.info("killing server")
@@ -68,7 +69,7 @@ def sendRequest(args):
         try:
             if connect(sock, port):
                 log.verbose("sending request to server")
-                sock.sendall(req + "\n")
+                sock.sendall((req + "\n").encode('utf-8'))
                 reply = sock.recv(1024) 
             else:
                 # Assume the server is not running
@@ -80,7 +81,7 @@ def sendRequest(args):
         finally:
             sock.close()
 
-    ret = re.split('\s+', reply)
+    ret = re.split('\s+', reply.decode('utf-8'))
     if ret is None or len(ret) < 1:
         raise VaultError('unable to process reply')
 

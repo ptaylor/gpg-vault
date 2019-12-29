@@ -26,14 +26,15 @@
 
 import os
 
-import log
-import config
-import vault
-import utils
-import errors
-import client
-import file
+#import gpg_vault.log
+#import gpg_vault.config
+#import gpg_vault.vault
+#import gpg_vault.utils
+#import gpg_vault.errors
+#import gpg_vault.client
+#import gpg_vault.file
 
+from gpg_vault import log, config, vault, utils, errors, client, file
 
 def run(cmd, files):
 
@@ -82,7 +83,7 @@ def runForFile(cmd, file):
 def cmd_cat(cmd, path):
     log.verbose("cmd_cat " + str(cmd) + ", " + str(path))
     vault.openVPath(path, None, None)
-    print ""
+    print("")
     utils.oswarning()
 
 

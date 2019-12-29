@@ -24,7 +24,7 @@
 # SOFTWARE.
 #
 
-import SocketServer
+import socketserver
 import datetime
 import re
 import sys
@@ -32,8 +32,10 @@ import os
 import time
 import signal
 
-import config
-import utils
+#import config
+#import utils
+
+from gpg_vault import config, utils
 
 HOST = "localhost"
 PMAP = {}
@@ -45,8 +47,8 @@ def start():
 
     vdir = utils.getVaultDir()
     if not os.path.exists(vdir):
-        print "ERROR - directory " + vdir + " does not exist"
-        exit(1)
+       print(f"ERROR - directory {vdir} does not exist")
+       exit(1)
 
     signal.signal(signal.SIGTERM, shutdown_handler)
     signal.signal(signal.SIGINT, shutdown_handler)
@@ -60,7 +62,7 @@ def start():
 
     pidFile = os.path.join(vdir, 'server.pid')
     if os.path.exists(pidFile):
-        print "ERROR - file " + pidFile + " exists"
+        print(f"ERROR - file {pidFile} exists")
         exit(1)
 
     port = int(config.CONFIG['server']['port'])
@@ -168,15 +170,15 @@ def log_to_file(m):
     logFile.flush()
 
 
-class MyTCPHandler(SocketServer.BaseRequestHandler):
+class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def __init__(self, request, client_address, server):
         log_to_file("request from client %s" % str(client_address))
-        SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
+        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
 
     def setup(self):
         log_to_file("setup")
-        return SocketServer.BaseRequestHandler.setup(self)
+        return socketserver.BaseRequestHandler.setup(self)
 
     def handle(self):
         request = self.request.recv(1024).strip()
@@ -184,10 +186,10 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             reply = request_error("client not local")
         else:
             reply = self.processCmd(request)
-            self.request.sendall(reply)
+            self.request.sendall(reply.encode('utf-8'))
 
     def processCmd(self, request):
-        cmds = re.split('\s+', request)
+        cmds = re.split('\s+', request.decode('utf-8'))
         if len(cmds) < 1:
             return request_error("invalid command")
         if cmds[0] == "set":
@@ -208,14 +210,14 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
             return request_error("unknown command")
 
 
-class VServer(SocketServer.TCPServer):
+class VServer(socketserver.TCPServer):
 
     allow_reuse_address = True
     timeout = 60 * 10  # TODO get this from config
 
     def __init__(self, server_addr, t, handlerClass):
         timeout = t  # !! NOT WORKING
-        SocketServer.TCPServer.__init__(self, server_addr, handlerClass)
+        socketserver.TCPServer.__init__(self, server_addr, handlerClass)
 
     def handle_timeout(self):
         log_to_file("timeout")

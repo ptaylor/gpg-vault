@@ -24,13 +24,14 @@
 # SOFTWARE.
 #
 
-import log
+#import gpg_vault.log
 
+from gpg_vault import log;
 
 class VaultError(Exception):
 
     def __init__(self, e):
-        log.verbose("VaultError: %s " % str(e))
+        log.verbose(f"VaultError: {e}")
         self.error = e
 
     def __str__(self):
@@ -40,7 +41,7 @@ class VaultError(Exception):
 class VaultSecurityError(Exception):
 
     def __init__(self, e):
-        log.verbose("VaultSecurityError: %s " % str(e))
+        log.verbose(f"VaultSecurityError: {e}")
         self.error = e
 
     def __str__(self):
@@ -50,7 +51,7 @@ class VaultSecurityError(Exception):
 class VaultQuit(Exception):
 
     def __init__(self, e):
-        log.verbose("VaultQuit: %s" % str(e))
+        log.verbose(f"VaultQuit: {e}")
         self.error = e
 
     def __str__(self):

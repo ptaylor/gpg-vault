@@ -28,10 +28,12 @@ import os
 import sys
 import traceback
 import subprocess
+import base64
 
-import log
-import config
+#import gpg_vault.log
+#import gpg_vault.config
 
+from gpg_vault import log, config, utils
 
 def isTrue(b):
     if isinstance(b, bool):
@@ -44,6 +46,12 @@ def isFalse(b):
     return not isTrue(b)
 
 
+def str2b64(s):
+    return base64.b64encode(s.encode('utf-8')).decode('utf-8')
+
+def b642str(s):
+    return base64.b64decode(s).decode('utf-8')
+   
 def runCommand(cmdName, arg):
     log.verbose("runCommand %s %s" % (cmdName, arg))
     before_mtime = 0
@@ -130,8 +138,9 @@ def splitPath(path):
 
 
 def log_exception(e):
-    tb = traceback.format_exc()
-    log.error(tb)
+    if utils.isTrue(config.CONFIG['general']['verbose']):
+      tb = traceback.format_exc()
+      log.error(tb)
 
 
 #

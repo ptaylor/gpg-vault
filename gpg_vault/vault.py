@@ -27,14 +27,15 @@
 import os
 import getpass
 
-import config
-import utils
-import log
-import client
-import crypto
-import errors
-import file
+#import gpg_vault.config
+#import gpg_vault.utils
+#import gpg_vault.log
+#import gpg_vault.client
+#import gpg_vault.crypto
+#import gpg_vault.errors
+#import gpg_vault.file
 
+from gpg_vault import config, utils, log, client, crypto, errors, file
 
 def validateVPaths(path):
     (plainPath, vpath) = validateVPath(path)
@@ -164,8 +165,9 @@ def getPassPhrase(group, confirm):
                 del pp2
                 raise errors.VaultSecurityError("Passphrases do not match")
             del pp2
-        log.sensitive("passphrase |%s|" % pp)
-        pp64 = pp.encode('base64')
+        log.sensitive(f"passphrase |{pp}|")
+        pp64 = utils.str2b64(pp) # base64.b64encode(pp.encode('utf-8')).decode('utf-8')
+        log.sensitive(f"base64 |{pp64}|")
         client.sendRequest(['set', group, pp64])
         del pp
         return pp64
