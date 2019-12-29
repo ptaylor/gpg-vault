@@ -131,7 +131,7 @@ def process_args(argv):
         elif opt in ("-q", "--quiet"):
             CONFIG['general']['quiet'] = True
         elif opt in ("--version"):
-            print("{__version__}")
+            print(f"{__version__}")
 
     CONFIG['files'] = args
 

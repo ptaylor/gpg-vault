@@ -26,7 +26,8 @@
 import os
 import ast
 
-from distutils.core import setup
+import setuptools
+#from distutils.core import setup
 
 def get_version():
     file_path = os.path.join(os.path.dirname(__file__), 'gpg_vault', '__init__.py')
@@ -38,7 +39,7 @@ def get_version():
                     return node.value.s
     raise RuntimeError("Unable to find version string.")
 
-setup(
+setuptools.setup(
         name='gpg-vault',
         version=get_version(),
         description='Simple GPG based file encryption utility.',
@@ -58,4 +59,5 @@ setup(
         ],
         install_requires=[
         ],
+        python_requires = '>3.7'
 )
