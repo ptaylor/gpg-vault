@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017, 2018 Paul Taylor
+# Copyright (c) 2017-2019 Paul Taylor
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -28,12 +28,9 @@
 import os
 import sys
 import getopt
-#import gpg_vault.log
-#import gpg_vault.utils
 import configparser
 
 from .  import utils, log, __version__
-#from gpg_vault import __version__
 
 WORK_DIR_NAME = ".gpg_vault"
 
@@ -45,7 +42,7 @@ DEFAULT_CONFIG = {
             'quiet': False,
             'sensitive': False,
             'kill_server': False,
-            'sensitive': True
+            'sensitive': False
         },
 
         'server': {

@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017, 2018 Paul Taylor
+# Copyright (c) 2017-2019 Paul Taylor
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -26,12 +26,6 @@
 
 import subprocess
 import os
-
-#import gpg_vault.errors
-#import gpg_vault.log
-#import gpg_vault.config
-#import gpg_vault.file
-#import gpg_vault.utils
 
 from gpg_vault import errors, log, config, file, utils
 

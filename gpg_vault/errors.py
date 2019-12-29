@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017, 2018 Paul Taylor
+# Copyright (c) 2017-2019 Paul Taylor
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -23,8 +23,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
-#import gpg_vault.log
 
 from gpg_vault import log;
 
