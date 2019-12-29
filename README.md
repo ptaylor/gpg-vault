@@ -8,7 +8,7 @@ Allows viewing and editing of encrypted files with passphrase caching.
 
 Using PIP:
 ```
-% pip install gpg-vault
+% pip3 install gpg-vault
 ```
 
 ## Viewing files
