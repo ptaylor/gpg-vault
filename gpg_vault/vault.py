@@ -79,9 +79,17 @@ def validateEditVPath(path):
 def validateEncryptVPath(path):
     (plainPath, vpath) = validateVPaths(path)
     if not os.path.exists(plainPath):
-        raise errors.VaultError(f"'{plainPath}' does not exists")
+        raise errors.VaultError(f"'{plainPath}' does not exist")
     if os.path.exists(vpath):
         raise errors.VaultError(f"'{vpath}' exists")
+    return (plainPath, vpath)
+
+def validateReencryptVPath(path):
+    (plainPath, vpath) = validateVPaths(path)
+    if not os.path.exists(vpath):
+        raise errors.VaultError(f"'{vpath}' does not exist")
+    if os.path.exists(plainPath):
+        raise errors.VaultError(f"'{plainPath}' exists")
     return (plainPath, vpath)
 
 
@@ -137,7 +145,24 @@ def encryptVPath(path):
     file.deletePath(plainPath)
 
 
-def getPassPhrase(group, confirm):
+
+def reencryptVPath(path, destpath):
+    log.verbose(f"reencryptVPath path={path}, destpath={destpath}")
+    (plainPath, vpath) = validateReencryptVPath(path)
+    log.verbose(f"reencryptVpath plainPath={plainPath}, vpath={vpath}")
+    group = config.CONFIG['general']['group']
+    group_current = group + ".current"
+    group_new = group + ".new"
+
+    pp64 = getPassPhrase(group_current, False, " (current)")
+    crypto.decryptFile(vpath, destpath, pp64)
+    
+    pp64 = getPassPhrase(group_new, True, " (new)")
+    crypto.encryptFile(destpath, vpath, pp64)
+    file.deletePath(plainPath)
+
+
+def getPassPhrase(group, confirm, tag = ""):
     log.verbose(f"getting passphrase group={group}, comfirm={confirm}")
     pp = client.sendRequest(['get', group])
     if len(pp) >= 1:
@@ -147,11 +172,11 @@ def getPassPhrase(group, confirm):
     pp = ''
     try:
         while pp == '':
-            pp = getpass.getpass('Passphrase: ')
+            pp = getpass.getpass(f"Passphrase {tag}: ")
         if confirm:
             pp2 = ''
             while pp2 == '':
-                pp2 = getpass.getpass('Confirm Passphrase: ')
+                pp2 = getpass.getpass(f"Confirm Passphrase {tag}: ")
             if pp != pp2:
                 del pp
                 del pp2

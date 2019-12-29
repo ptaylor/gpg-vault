@@ -54,6 +54,7 @@ setuptools.setup(
                 'scripts/vedit',
                 'scripts/vopen',
                 'scripts/vencrypt',
+                'scripts/vreencrypt',
                 'scripts/vclear',
                 'scripts/gpg-vault-server'
         ],

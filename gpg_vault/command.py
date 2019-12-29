@@ -53,6 +53,7 @@ def runForFile(cmd, file):
             'open': cmd_open,
             'edit': cmd_edit,
             'encrypt': cmd_encrypt,
+            'reencrypt': cmd_reencrypt,
             'clear': cmd_clear
             }[cmd](cmd, file)
     except errors.VaultSecurityError as e:
@@ -102,6 +103,15 @@ def cmd_edit(cmd, path):
 def cmd_encrypt(cmd, path):
     log.verbose(f"cmd_encrypt cmd={cmd}, path={path}")
     vault.encryptVPath(path)
+
+def cmd_reencrypt(cmd, path):
+    log.verbose(f"cmd_reencrypt cmd={cmd}, path={path}")
+    tmpdir = utils.getTmpDir()
+    try:
+        tmppath = os.path.join(tmpdir, str(os.getpid()))
+        vault.reencryptVPath(path, tmppath)
+    finally:
+        file.deleteDir(tmpdir)
 
 
 def cmd_clear(cmd, path):
