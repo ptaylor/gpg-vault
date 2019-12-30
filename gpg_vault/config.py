@@ -148,5 +148,25 @@ def getSection(config, name):
 
 
 def usage():
-    print("USAGE: ...")
+
+    cmd = os.path.basename(sys.argv[0])
+    print(f"""
+
+usage: {cmd} [options] [<path>]
+
+  -g --group     Credentail group to use (default is 'default').
+
+  -l --kill      Kill server after running.
+
+  -v --verbose   Verbose logging.
+
+  -q --quiet     Reduced logging.
+
+  -h --help      Display this help.
+
+  --version      Display version information.
+
+For detailed information see https://github.com/ptaylor/gpg-vault/blob/v{__version__}/README.md
+
+""")
     sys.exit(1)

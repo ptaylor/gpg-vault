@@ -159,7 +159,6 @@ def reencryptVPath(path, destpath):
     
     pp64 = getPassPhrase(group_new, True, " (new)")
     crypto.encryptFile(destpath, vpath, pp64)
-    file.deletePath(plainPath)
 
 
 def getPassPhrase(group, confirm, tag = ""):
@@ -172,11 +171,11 @@ def getPassPhrase(group, confirm, tag = ""):
     pp = ''
     try:
         while pp == '':
-            pp = getpass.getpass(f"Passphrase {tag}: ")
+            pp = getpass.getpass(f"Passphrase{tag}: ")
         if confirm:
             pp2 = ''
             while pp2 == '':
-                pp2 = getpass.getpass(f"Confirm Passphrase {tag}: ")
+                pp2 = getpass.getpass(f"Confirm Passphrase{tag}: ")
             if pp != pp2:
                 del pp
                 del pp2

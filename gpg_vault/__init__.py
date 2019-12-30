@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-__version__ = '1.5'
+__version__ = '1.5.1'
 
 import gpg_vault.log
 import gpg_vault.file

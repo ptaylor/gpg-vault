@@ -32,7 +32,7 @@ import os
 import time
 import signal
 
-from gpg_vault import config, utils
+from gpg_vault import config, utils, __version__
 
 HOST = "localhost"
 PMAP = {}
@@ -41,6 +41,7 @@ global logFile
 
 
 def start():
+
 
     vdir = utils.getVaultDir()
     if not os.path.exists(vdir):
@@ -55,7 +56,9 @@ def start():
     logFilePath = os.path.join(vdir, 'server.log')
     global logFile
     logFile = open(logFilePath, "a")
+    log_to_file("")
     log_to_file(f"starting; pid {os.getpid()}")
+    log_to_file(f"version: {__version__}")
 
     pidFile = os.path.join(vdir, 'server.pid')
     if os.path.exists(pidFile):
